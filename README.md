@@ -71,13 +71,22 @@ Komanda prikazuje na kom ste branch-u, koje fajlove ste promenili, koji fajlovi 
 
 ## 4. Branch-evi
 
-Branch omogućava da radite na svom task-u bez direktnog menjanja glavne grane `main`. U timskom radu za funkcionalnosti i ispravke koristimo odvojene branch-eve.
+Branch omogućava da radite na svom task-u bez direktnog menjanja stabilne grane `main`.
+
+Naša branching strategija je:
+
+- `main` — stabilan i čist kod spreman za produkciju.
+- `dev` — razvojna/integraciona grana na kojoj se spajaju završene feature grane i koju QA/tester koristi za testiranje.
+- `feature/*` i `fix/*` — grane za pojedinačne taskove, funkcionalnosti i ispravke.
+
+Feature i fix grane se **ne spajaju direktno u `main`**. Prvo se kroz Pull Request spajaju u `dev`, zatim QA/tester povlači najnoviji `dev` i testira objedinjene promene. Kada je verzija na `dev` proverena i stabilna, `dev` se kroz Pull Request merge-uje u `main`. Na taj način `main` ostaje čist i stabilan.
 
 ```text
 main
-├── feature/navbar
-├── feature/login-page
-└── fix/mobile-menu
+└── dev
+    ├── feature/navbar
+    ├── feature/login-page
+    └── fix/mobile-menu
 ```
 
 ### 4.1. Pregled branch-eva
@@ -103,7 +112,7 @@ git switch main
 git switch feature/navbar
 ```
 
-> **NAPOMENA:** U timskom workflow-u ne radimo direktno na `main` branch-u. Za task pravimo poseban branch, osim ako team lead ne odredi drugačije.
+> **NAPOMENA:** U timskom workflow-u ne radimo direktno ni na `main` ni na `dev` branch-u. Za svaki task pravimo poseban `feature/*` ili `fix/*` branch koji nastaje iz ažuriranog `dev` branch-a.
 
 ---
 
@@ -240,16 +249,16 @@ git pull
 
 Merge spaja istoriju jednog branch-a u branch na kojem se trenutno nalazite.
 
-Primer: želite lokalno da spojite `feature/navbar` u `main`:
+Primer: želite lokalno da spojite `feature/navbar` u `dev`:
 
 ```bash
-git switch main
+git switch dev
 git merge feature/navbar
 ```
 
 Važno je da razumete smer: `git merge feature/navbar` znači „uzmi izmene iz `feature/navbar` i spoji ih u branch na kojem sam sada“.
 
-> **NAPOMENA:** U našem timskom radu feature branch se najčešće neće ručno spajati direktno u `main`. Standardni način je Pull Request na GitHub-u, code review, pa merge preko GitHub-a.
+> **NAPOMENA:** U našem timskom radu feature branch se ne spaja direktno u `main`. Standardni tok je `feature/*` → Pull Request → `dev` → QA testiranje → Pull Request → `main`.
 
 ### 7.1. Merge conflict
 
@@ -278,7 +287,11 @@ Ako konflikt nastane tokom Pull Request-a, GitHub će pokazati da branch ne mož
 
 **GDE RADIMO:** GitHub u browser-u — Pull Request nije Git komanda; to je funkcionalnost GitHub-a.
 
-Pull Request je zahtev da se promene sa jednog branch-a pregledaju i, nakon odobrenja, spoje u drugi branch — najčešće u `main`.
+Pull Request je zahtev da se promene sa jednog branch-a pregledaju i, nakon odobrenja, spoje u drugi branch.
+
+U našem workflow-u:
+- feature/fix branch ide u `dev`;
+- nakon QA testiranja, `dev` ide u `main`.
 
 Pre kreiranja PR-a vaš branch mora da bude push-ovan na GitHub:
 
@@ -289,12 +302,12 @@ git push -u origin feature/navbar
 1. Na GitHub-u otvorite repository.
 2. Otvorite **Pull requests**.
 3. Kliknite **New pull request**.
-4. Kao **base** izaberite `main`, a kao **compare** vaš feature branch.
+4. Kao **base** izaberite `dev`, a kao **compare** vaš feature/fix branch.
 5. Pregledajte listu promena i kliknite **Create pull request**.
 6. Dodajte jasan naslov i kratak opis onoga što je urađeno.
 
 ```text
-feature/navbar → Pull Request → Code Review → Approve → Merge → main
+feature/navbar → Pull Request → Code Review → Merge → dev → QA testiranje → Pull Request → main
 ```
 
 ### 8.1. Šta se radi tokom code review-a?
@@ -363,12 +376,16 @@ stash@{1}: WIP on feature/login
 
 ## 10. Nakon merge-a
 
-Kada je Pull Request merge-ovan, vratite se na `main` i preuzmite najnovije promene:
+Kada je feature/fix Pull Request merge-ovan u `dev`, vratite se na `dev` i preuzmite najnovije promene:
 
 ```bash
-git switch main
+git switch dev
 git pull
 ```
+
+QA/tester zatim povlači najnoviji `dev` i testira objedinjene promene. Kada je `dev` stabilan i testiran, pravi se Pull Request iz `dev` u `main`.
+
+Nakon što je `dev` merge-ovan u `main`, `main` predstavlja stabilnu i proverenu verziju koda.
 
 Ako vam lokalni feature branch više nije potreban, možete ga obrisati:
 
@@ -384,7 +401,7 @@ Opcija `-d` bezbedno briše lokalni branch ako Git proceni da su njegove promene
 
 Ovo je redosled koji će član najčešće koristiti kada dobije novi task:
 
-1. `git switch main`
+1. `git switch dev`
 2. `git pull`
 3. `git switch -c feature/naziv-taska`
 4. Rad na kodu
@@ -393,11 +410,13 @@ Ovo je redosled koji će član najčešće koristiti kada dobije novi task:
 7. `git add .`
 8. `git commit -m "Jasna poruka"`
 9. `git push -u origin feature/naziv-taska`
-10. Kreirati Pull Request na GitHub-u
+10. Kreirati Pull Request iz feature/fix branch-a u `dev`
 11. Odgovoriti na review i po potrebi uraditi nove commit-e + `git push`
-12. Nakon merge-a: `git switch main && git pull`
+12. Nakon merge-a QA/tester povlači `dev` i testira promene
+13. Kada je `dev` stabilan, kreirati Pull Request iz `dev` u `main`
+14. Nakon merge-a u `main`, produkciona/stabilna grana ostaje čista
 
-> **PRAKTIČNO PRAVILO:** Pre početka novog branch-a uvek prvo osvežite `main`, osim ako je za konkretan projekat dogovoren drugačiji workflow.
+> **PRAKTIČNO PRAVILO:** Pre početka novog feature/fix branch-a uvek prvo osvežite `dev`. Feature branch se pravi iz `dev`, ne iz `main`.
 
 ---
 
@@ -423,4 +442,4 @@ Ovo je redosled koji će član najčešće koristiti kada dobije novi task:
 | `git stash pop` | Vraća poslednji stash. |
 | `git branch -d ime` | Briše lokalni branch kada više nije potreban. |
 
-> **NAPOMENA:** Za početak nije potrebno učiti napredne komande kao što su `rebase`, `cherry-pick` ili `reset --hard`. Fokus je da sigurno savladate standardni **branch → commit → push → Pull Request → merge** workflow.
+> **NAPOMENA:** Za početak nije potrebno učiti napredne komande kao što su `rebase`, `cherry-pick` ili `reset --hard`. Fokus je da sigurno savladate standardni **feature/fix branch → commit → push → Pull Request → dev → QA testiranje → Pull Request → main** workflow.
