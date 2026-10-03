@@ -32,7 +32,7 @@ git -v
 Klonirati repozitorijum:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/GDGoC-Belgrade/HackathonLive.git
 cd HackathonLive
 ```
 
