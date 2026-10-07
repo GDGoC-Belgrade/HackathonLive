@@ -1,7 +1,9 @@
 import "dotenv/config";
 
+import { eq } from "drizzle-orm";
+
 import { db } from "../index";
-import { hackathons } from "../schema";
+import { hackathons, lunchBreaks } from "../schema";
 import { seedDatasets, type SeedDatasetName } from "./datasets";
 
 const datasetName = process.argv[2] as SeedDatasetName | undefined;
@@ -23,7 +25,26 @@ if (!dataset) {
 }
 
 async function seed() {
-  await db.insert(hackathons).values(dataset.hackathon);
+  const [existing] = await db
+    .select()
+    .from(hackathons)
+    .where(eq(hackathons.name, dataset.hackathon.name))
+    .limit(1);
+
+  const hackathon =
+    existing ??
+    (await db.insert(hackathons).values(dataset.hackathon).returning())[0];
+
+  await db
+    .delete(lunchBreaks)
+    .where(eq(lunchBreaks.hackathonId, hackathon.id));
+
+  await db.insert(lunchBreaks).values(
+    dataset.lunchBreaks.map((lunchBreak) => ({
+      ...lunchBreak,
+      hackathonId: hackathon.id,
+    }))
+  );
 
   console.log(`Seed "${datasetName}" completed successfully`);
 }
