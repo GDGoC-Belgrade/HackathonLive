@@ -15,6 +15,13 @@
       "when": 1791288923929,
       "tag": "0001_unique_harpoon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791407747652,
+      "tag": "0002_powerful_bulldozer",
+      "breakpoints": true
     }
   ]
 }

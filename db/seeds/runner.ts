@@ -1,7 +1,7 @@
 import "dotenv/config";
 
 import { db } from "../index";
-import { hackathons } from "../schema";
+import { hackathons, scheduleEvents } from "../schema";
 import { seedDatasets, type SeedDatasetName } from "./datasets";
 
 const datasetName = process.argv[2] as SeedDatasetName | undefined;
@@ -23,7 +23,21 @@ if (!dataset) {
 }
 
 async function seed() {
-  await db.insert(hackathons).values(dataset.hackathon);
+  const [hackathon] = await db
+    .insert(hackathons)
+    .values(dataset.hackathon)
+    .returning();
+
+  if (!hackathon) {
+    throw new Error("Hackathon insert did not return a record.");
+  }
+
+  await db.insert(scheduleEvents).values(
+    dataset.scheduleEvents.map((event) => ({
+      ...event,
+      hackathonId: hackathon.id,
+    }))
+  );
 
   console.log(`Seed "${datasetName}" completed successfully`);
 }
