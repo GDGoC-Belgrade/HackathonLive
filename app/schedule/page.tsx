@@ -1,5 +1,5 @@
 import { mockEvents } from '@/data/mockSchedule';
-import { ScheduleEventCard } from '@/components/ScheduleEvent';
+import { ScheduleEventCard } from '@/app/components/ScheduleEvent';
 
 export default function SchedulePage() {
   return (
