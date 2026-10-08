@@ -1,6 +1,7 @@
 import { Megaphone, Utensils, Code, Trophy, MapPin, type LucideIcon } from 'lucide-react';
 import { ScheduleEvent } from '@/data/mockSchedule';
 
+type EventType = NonNullable<ScheduleEvent['type']> |  'default';
 const cardColorMap: Record<string, string> = {
   blue: 'bg-brand-blue/10',
   yellow: 'bg-brand-yellow/10',
