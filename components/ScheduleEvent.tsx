@@ -32,9 +32,10 @@ interface Props {
 
 export const ScheduleEventCard = ({ event }: Props) => {
   const theme = event.type || 'default';
-  const cardBg = cardColorMap[theme] || cardColorMap.default;
-  const iconColor = iconColorMap[theme] || iconColorMap.default;
-  const Icon = iconMap[theme] || iconMap.default;
+  const theme: EventType = event.type ?? 'default';
+  const cardBg = cardColorMap[theme];
+  const iconColor = iconColorMap[theme];
+  const Icon = iconMap[theme];
 
   return (
     <div className={`flex items-center gap-3 rounded-2xl p-4 shadow-sm text-gray-900 ${cardBg}`}>
