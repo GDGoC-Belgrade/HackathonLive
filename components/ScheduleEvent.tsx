@@ -2,7 +2,7 @@ import { Megaphone, Utensils, Code, Trophy, MapPin, type LucideIcon } from 'luci
 import { ScheduleEvent } from '@/data/mockSchedule';
 
 type EventType = NonNullable<ScheduleEvent['type']> |  'default';
-const cardColorMap: Record<string, string> = {
+const cardColorMap: Record<EventType, string> = {
   blue: 'bg-brand-blue/10',
   yellow: 'bg-brand-yellow/10',
   red: 'bg-brand-red/10',
