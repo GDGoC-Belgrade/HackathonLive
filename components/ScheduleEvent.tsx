@@ -10,7 +10,7 @@ const cardColorMap: Record<EventType, string> = {
   default: 'bg-gray-100',
 };
 
-const iconColorMap: Record<string, string> = {
+const iconColorMap: Record<EventType, string> = {
   blue: 'text-brand-blue',
   yellow: 'text-brand-yellow',
   red: 'text-brand-red',
