@@ -1,8 +1,9 @@
 import "dotenv/config";
 
 import { db } from "../index";
-import { hackathons } from "../schema";
+import { hackathons, mentors } from "../schema";
 import { seedDatasets, type SeedDatasetName } from "./datasets";
+import { eq } from "drizzle-orm/sql/expressions/conditions";
 
 const datasetName = process.argv[2] as SeedDatasetName | undefined;
 
@@ -16,14 +17,29 @@ const dataset = seedDatasets[datasetName];
 
 if (!dataset) {
   console.error(`Unknown seed dataset: ${datasetName}`);
-  console.error(
-    `Available datasets: ${Object.keys(seedDatasets).join(", ")}`
-  );
+  console.error(`Available datasets: ${Object.keys(seedDatasets).join(", ")}`);
   process.exit(1);
 }
 
 async function seed() {
-  await db.insert(hackathons).values(dataset.hackathon);
+  const [existing] = await db
+    .select()
+    .from(hackathons)
+    .where(eq(hackathons.name, dataset.hackathon.name))
+    .limit(1);
+
+  const hackathon =
+    existing ??
+    (await db.insert(hackathons).values(dataset.hackathon).returning())[0];
+
+  await db.delete(mentors).where(eq(mentors.hackathonId, hackathon.id));
+
+  await db.insert(mentors).values(
+    dataset.mentors.map((mentor) => ({
+      ...mentor,
+      hackathonId: hackathon.id,
+    })),
+  );
 
   console.log(`Seed "${datasetName}" completed successfully`);
 }
