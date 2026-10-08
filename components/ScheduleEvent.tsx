@@ -18,7 +18,7 @@ const iconColorMap: Record<EventType, string> = {
   default: 'text-gray-500',
 };
 
-const iconMap: Record<string, LucideIcon> = {
+const iconMap: Record<EventType, LucideIcon> = {
   blue: Megaphone,
   yellow: Utensils,
   red: Code,
