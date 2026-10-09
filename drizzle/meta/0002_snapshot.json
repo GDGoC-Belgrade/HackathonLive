@@ -1,5 +1,5 @@
 {
-  "id": "a09a06fb-b36d-4d14-b2c5-f8385f5ce19a",
+  "id": "9c0ea5dc-2c0d-40be-ae9e-28df161d5995",
   "prevId": "dd64525f-693c-48fd-af3e-85e477315687",
   "version": "7",
   "dialect": "postgresql",
@@ -78,8 +78,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.schedule_events": {
-      "name": "schedule_events",
+    "public.lunch_breaks": {
+      "name": "lunch_breaks",
       "schema": "",
       "columns": {
         "id": {
@@ -123,20 +123,13 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
-        },
-        "type": {
-          "name": "type",
-          "type": "schedule_event_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "schedule_events_hackathon_id_hackathons_id_fk": {
-          "name": "schedule_events_hackathon_id_hackathons_id_fk",
-          "tableFrom": "schedule_events",
+        "lunch_breaks_hackathon_id_hackathons_id_fk": {
+          "name": "lunch_breaks_hackathon_id_hackathons_id_fk",
+          "tableFrom": "lunch_breaks",
           "tableTo": "hackathons",
           "columnsFrom": [
             "hackathon_id"
@@ -163,17 +156,6 @@
         "upcoming",
         "active",
         "finished"
-      ]
-    },
-    "public.schedule_event_type": {
-      "name": "schedule_event_type",
-      "schema": "public",
-      "values": [
-        "ceremony",
-        "workshop",
-        "meal",
-        "deadline",
-        "other"
       ]
     }
   },
