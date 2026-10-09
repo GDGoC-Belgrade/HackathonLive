@@ -1,5 +1,5 @@
 {
-  "id": "755c9191-834a-4662-b173-d821b6fa09a8",
+  "id": "9c0ea5dc-2c0d-40be-ae9e-28df161d5995",
   "prevId": "dd64525f-693c-48fd-af3e-85e477315687",
   "version": "7",
   "dialect": "postgresql",
@@ -78,8 +78,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.mentors": {
-      "name": "mentors",
+    "public.lunch_breaks": {
+      "name": "lunch_breaks",
       "schema": "",
       "columns": {
         "id": {
@@ -94,44 +94,32 @@
           "primaryKey": false,
           "notNull": true
         },
-        "name": {
-          "name": "name",
+        "title": {
+          "name": "title",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
-        "role": {
-          "name": "role",
-          "type": "varchar(255)",
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
-        "company": {
-          "name": "company",
-          "type": "varchar(255)",
+        "end_time": {
+          "name": "end_time",
+          "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
-        "bio": {
-          "name": "bio",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "image_url": {
-          "name": "image_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "phone_number": {
-          "name": "phone_number",
-          "type": "varchar(20)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "email": {
-          "name": "email",
+        "location": {
+          "name": "location",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
@@ -139,9 +127,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "mentors_hackathon_id_hackathons_id_fk": {
-          "name": "mentors_hackathon_id_hackathons_id_fk",
-          "tableFrom": "mentors",
+        "lunch_breaks_hackathon_id_hackathons_id_fk": {
+          "name": "lunch_breaks_hackathon_id_hackathons_id_fk",
+          "tableFrom": "lunch_breaks",
           "tableTo": "hackathons",
           "columnsFrom": [
             "hackathon_id"
@@ -149,7 +137,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },

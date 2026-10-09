@@ -1,3 +1,5 @@
+import type { NewQuest } from "../../schema";
+
 export const hackathonDemo = {
   hackathon: {
     name: "HackathonLive Demo",
@@ -42,4 +44,123 @@ export const hackathonDemo = {
       email: "milica.nikolic@example.com",
     },
   ],
+  
+  scheduleEvents: [
+    {
+      title: "Opening Ceremony",
+      description: "Kickoff and welcome for all participants",
+      startTime: new Date("2026-10-10T09:00:00Z"),
+      endTime: new Date("2026-10-10T10:00:00Z"),
+      location: "Main Hall",
+      type: "ceremony" as const,
+    },
+    {
+      title: "Intro to Next.js Workshop",
+      description: "Hands-on workshop covering Next.js fundamentals",
+      startTime: new Date("2026-10-10T11:00:00Z"),
+      endTime: new Date("2026-10-10T12:30:00Z"),
+      location: "Workshop Room A",
+      type: "workshop" as const,
+    },
+    {
+      title: "Lunch Break",
+      description: null,
+      startTime: new Date("2026-10-10T13:00:00Z"),
+      endTime: new Date("2026-10-10T14:00:00Z"),
+      location: "Cafeteria",
+      type: "meal" as const,
+    },
+    {
+      title: "Submission Deadline",
+      description: "All projects must be submitted by this time",
+      startTime: new Date("2026-10-12T14:30:00Z"),
+      endTime: new Date("2026-10-12T15:00:00Z"),
+      location: "Online",
+      type: "deadline" as const,
+    },
+    {
+      title: "Final Presentations",
+      description: "Teams present their projects to the jury",
+      startTime: new Date("2026-10-12T16:00:00Z"),
+      endTime: new Date("2026-10-12T18:00:00Z"),
+      location: "Main Hall",
+      type: "other" as const,
+    },
+  ],
+
+   announcements: [
+    {
+      title: "Welcome to HackathonLive!",
+      message: "Welcome everyone! The hackathon has officially started.",
+      type: "important" as const,
+      createdAt: new Date("2026-10-10T08:00:00Z"),
+      expiresAt: new Date("2026-10-12T18:00:00Z"),
+    },
+    {
+      title: "Registration is open",
+      message: "Make sure your team is registered before the deadline.",
+      type: "info" as const,
+      createdAt: new Date("2026-10-10T08:00:00Z"),
+      expiresAt: new Date("2026-10-12T18:00:00Z"),
+    },
+    {
+      title: "Submission deadline",
+      message: "Remember that all projects must be submitted before the hackathon ends.",
+      type: "warning" as const,
+      createdAt: new Date("2026-10-10T08:00:00Z"),
+      expiresAt: new Date("2026-10-12T18:00:00Z"),
+    },
+  ],
+  
+  lunchBreaks: [
+    {
+      title: "Lunch Break - Day 1",
+      description: "Lunch and networking",
+      startTime: new Date("2026-10-10T11:30:00Z"),
+      endTime: new Date("2026-10-10T12:30:00Z"),
+      location: "Cafeteria",
+    },
+    {
+      title: "Lunch Break - Day 2",
+      description: "Lunch and mentor chat",
+      startTime: new Date("2026-10-11T11:30:00Z"),
+      endTime: new Date("2026-10-11T12:30:00Z"),
+      location: "Cafeteria",
+    },
+    {
+      title: "Lunch Break - Day 3",
+      description: "Final day lunch",
+      startTime: new Date("2026-10-12T11:30:00Z"),
+      endTime: new Date("2026-10-12T12:30:00Z"),
+      location: "Main Hall",
+    },
+  ],
+  quests: [
+    {
+      title: "Selfie Squad",
+      description:
+        "Take a photo with another team wearing a different colored badge.",
+      category: "social",
+      googleFormUrl: "https://docs.google.com/forms/d/e/REPLACE_ME_1/viewform",
+    },
+    {
+      title: "Caffeine Chat",
+      description:
+        "Grab a coffee with a mentor and ask about their favorite tech stack.",
+      category: "networking",
+      googleFormUrl: "https://docs.google.com/forms/d/e/REPLACE_ME_2/viewform",
+    },
+    {
+      title: "Bug Hunter",
+      description: "Find the hidden bug in the workshop demo code.",
+      category: "technical",
+      googleFormUrl: "https://docs.google.com/forms/d/e/REPLACE_ME_3/viewform",
+    },
+    {
+      title: "Feedback Loop",
+      description: "Submit feedback for the morning keynote session.",
+      category: "feedback",
+      googleFormUrl: "https://docs.google.com/forms/d/e/REPLACE_ME_4/viewform",
+    },
+  ] satisfies Omit<NewQuest, "hackathonId">[],
 };
