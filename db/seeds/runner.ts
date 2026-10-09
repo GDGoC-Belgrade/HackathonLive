@@ -1,10 +1,12 @@
 import "dotenv/config";
 
-import { eq } from "drizzle-orm";
+import {eq} from "drizzle-orm";
+
+
 
 import { isValidGoogleFormUrl } from "../../lib/google-form-url";
-import { db } from "../index";
-import { hackathons, lunchBreaks, quests } from "../schema";
+
+import { hackathons, lunchBreaks, quests, announcements } from "../schema";
 import { seedDatasets, type SeedDatasetName } from "./datasets";
 
 const datasetName = process.argv[2] as SeedDatasetName | undefined;
@@ -49,27 +51,38 @@ async function seed() {
     existing ??
     (await db.insert(hackathons).values(dataset.hackathon).returning())[0];
 
-  await db
-    .delete(lunchBreaks)
-    .where(eq(lunchBreaks.hackathonId, hackathon.id));
+    await db
+      .delete(announcements)
+      .where(eq(announcements.hackathonId, hackathon.id));
 
-  await db.insert(lunchBreaks).values(
-    dataset.lunchBreaks.map((lunchBreak) => ({
-      ...lunchBreak,
-      hackathonId: hackathon.id,
-    }))
-  );
+    await db.insert(announcements).values(
+      dataset.announcements.map((announcement) => ({
+        ...announcement,
+        hackathonId: hackathon.id,
+      }))
+    );
 
-  await db
-    .delete(quests)
-    .where(eq(quests.hackathonId, hackathon.id));
+    await db
+      .delete(lunchBreaks)
+      .where(eq(lunchBreaks.hackathonId, hackathon.id));
 
-  await db.insert(quests).values(
-    dataset.quests.map((quest) => ({
-      ...quest,
-      hackathonId: hackathon.id,
-    }))
-  );
+    await db.insert(lunchBreaks).values(
+      dataset.lunchBreaks.map((lunchBreak) => ({
+        ...lunchBreak,
+        hackathonId: hackathon.id,
+      }))
+    );
+
+    await db
+      .delete(quests)
+      .where(eq(quests.hackathonId, hackathon.id));
+
+    await db.insert(quests).values(
+      dataset.quests.map((quest) => ({
+        ...quest,
+        hackathonId: hackathon.id,
+      }))
+    );
 
   console.log(`Seed "${datasetName}" completed successfully`);
 }
