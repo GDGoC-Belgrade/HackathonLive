@@ -1,5 +1,5 @@
 {
-  "id": "649d2855-cae2-4aa7-89d5-55c736645fe0",
+  "id": "9c0ea5dc-2c0d-40be-ae9e-28df161d5995",
   "prevId": "dd64525f-693c-48fd-af3e-85e477315687",
   "version": "7",
   "dialect": "postgresql",
@@ -78,8 +78,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.announcements": {
-      "name": "announcements",
+    "public.lunch_breaks": {
+      "name": "lunch_breaks",
       "schema": "",
       "columns": {
         "id": {
@@ -100,55 +100,36 @@
           "primaryKey": false,
           "notNull": true
         },
-        "message": {
-          "name": "message",
+        "description": {
+          "name": "description",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
-        "type": {
-          "name": "type",
-          "type": "announcement_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'info'"
-        },
-        "created_at": {
-          "name": "created_at",
+        "end_time": {
+          "name": "end_time",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
         },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp with time zone",
+        "location": {
+          "name": "location",
+          "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
-      "indexes": {
-        "announcements_hackathon_id_idx": {
-          "name": "announcements_hackathon_id_idx",
-          "columns": [
-            {
-              "expression": "hackathon_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
-        "announcements_hackathon_id_hackathons_id_fk": {
-          "name": "announcements_hackathon_id_hackathons_id_fk",
-          "tableFrom": "announcements",
+        "lunch_breaks_hackathon_id_hackathons_id_fk": {
+          "name": "lunch_breaks_hackathon_id_hackathons_id_fk",
+          "tableFrom": "lunch_breaks",
           "tableTo": "hackathons",
           "columnsFrom": [
             "hackathon_id"
@@ -156,7 +137,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
@@ -175,15 +156,6 @@
         "upcoming",
         "active",
         "finished"
-      ]
-    },
-    "public.announcement_type": {
-      "name": "announcement_type",
-      "schema": "public",
-      "values": [
-        "info",
-        "warning",
-        "important"
       ]
     }
   },
