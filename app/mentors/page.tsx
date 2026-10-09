@@ -1,8 +1,11 @@
+import { mockMentors } from '@/data/mockMentors';
+import { MentorList } from '@/app/components/MentorList';
 
-const page = () => {
+export default function MentorsPage() {
   return (
-    <h1>Mentors</h1>
-  )
+    <div className="mx-auto max-w-md text-gray-900">
+      <h1 className="mb-4 text-2xl font-bold">Connect with Mentors</h1>
+      <MentorList mentors={mockMentors} />
+    </div>
+  );
 }
-
-export default page
