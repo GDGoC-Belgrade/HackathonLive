@@ -9,7 +9,7 @@ import {eq} from "drizzle-orm";
 import { isValidGoogleFormUrl } from "../../lib/google-form-url";
 
 import { hackathons, lunchBreaks, quests, announcements, scheduleEvents, mentors } from "../schema";
-import { seedDatasets, type SeedDatasetName } from "./datasets";
+import { datasets, type SeedDatasetName } from "./datasets";
 //import { eq } from "drizzle-orm/sql/expressions/conditions";
 
 const datasetName = process.argv[2] as SeedDatasetName | undefined;
@@ -20,11 +20,11 @@ if (!datasetName) {
   process.exit(1);
 }
 
-const dataset = seedDatasets[datasetName];
+const dataset = datasets[datasetName];
 
 if (!dataset) {
   console.error(`Unknown seed dataset: ${datasetName}`);
-  console.error(`Available datasets: ${Object.keys(seedDatasets).join(", ")}`);
+  console.error(`Available datasets: ${Object.keys(datasets).join(", ")}`);
   process.exit(1);
 }
 
