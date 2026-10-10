@@ -6,7 +6,7 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import type { Quest } from "@/lib/mock/quests";
+import type { Quest } from "@/data/mockQuests";
 
 
 const THEMES: { bg: string; text: string; border: string }[] = [

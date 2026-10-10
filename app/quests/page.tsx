@@ -1,5 +1,5 @@
 import { QuestCard } from "@/app/components/QuestCard";
-import { mockQuests } from "@/lib/mock/quests";
+import { mockQuests } from "@/data/mockQuests";
 
 const page = () => {
   return (
