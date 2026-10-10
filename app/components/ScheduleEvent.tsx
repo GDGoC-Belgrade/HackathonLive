@@ -39,12 +39,12 @@ export const ScheduleEventCard = ({ event }: Props) => {
   return (
     <div className={`flex items-center gap-3 rounded-2xl p-4 shadow-sm text-gray-900 ${cardBg}`}>
       <Icon className={`h-6 w-6 shrink-0 ${iconColor}`} aria-hidden="true" />
-      <div>
+      <div className="min-w-0">
         <p className="whitespace-nowrap text-xs font-semibold text-gray-600">
           {event.startTime}
         </p>
-        <h3 className="font-semibold">{event.title}</h3>
-        <p className="text-sm text-gray-600">({event.location})</p>
+        <h3 className="font-semibold break-words">{event.title}</h3>
+        <p className="text-sm text-gray-600 break-words">({event.location})</p>
       </div>
     </div>
   );
