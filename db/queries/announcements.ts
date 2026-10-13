@@ -1,8 +1,9 @@
-import { eq } from "drizzle-orm";
+import { and, desc, eq, gt, isNull, or } from "drizzle-orm";
 
 import { db } from "../index";
 import { announcements } from "../schema";
 import { getActiveHackathon } from "./hackathons";
+
 
 export async function getActiveAnnouncements() {
   const hackathon = await getActiveHackathon();
@@ -13,7 +14,16 @@ export async function getActiveAnnouncements() {
   return db
   .select()
   .from(announcements)
-  .where(eq(announcements.hackathonId, hackathon.id));
+  .where(
+      and(
+        eq(announcements.hackathonId, hackathon.id),
+        or(
+          isNull(announcements.expiresAt),
+          gt(announcements.expiresAt, new Date()),
+        ),
+      ),
+    )
+    .orderBy(desc(announcements.createdAt));
 }
 
   
