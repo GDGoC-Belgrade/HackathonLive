@@ -17,11 +17,6 @@ export interface LunchBreak {
   startTime: Date;
 }
 
-export interface CurrentSession {
-  title: string;
-  progress: number; // 0-100
-}
-
 export type AnnouncementType = 'important' | 'warning' | 'info';
 
 export interface Announcement {
@@ -47,10 +42,6 @@ export const mockLunchBreak: LunchBreak = {
   startTime: minutesFromNow(15),
 };
 
-export const mockCurrentSession: CurrentSession = {
-  title: 'Coding Sprint 1',
-  progress: 85,
-};
 
 export const mockAnnouncements: Announcement[] = [
   {

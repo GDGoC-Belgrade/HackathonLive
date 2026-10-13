@@ -1,4 +1,4 @@
-import { mockAnnouncements, mockCurrentSession, mockHackathon, mockLunchBreak } from '@/data/mockHome';
+import { mockAnnouncements, mockHackathon, mockLunchBreak } from '@/data/mockHome';
 import { mockEvents } from '@/data/mockSchedule';
 import { TopBar } from '@/app/components/home/TopBar';
 import { HackathonHeader } from '@/app/components/home/HackathonHeader';
@@ -16,7 +16,7 @@ export default function Home() {
       <TopBar />
       <HackathonHeader hackathon={mockHackathon} />
       <CountdownCard endDate={mockHackathon.endDate} />
-      <LunchBreakCard lunchBreak={mockLunchBreak} currentSession={mockCurrentSession} />
+      <LunchBreakCard lunchBreak={mockLunchBreak} />
       <UpcomingEventsSection events={upcomingEvents} />
       <AnnouncementsSection announcements={mockAnnouncements} />
     </div>
