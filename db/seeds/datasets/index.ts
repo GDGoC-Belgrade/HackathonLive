@@ -1,7 +1,7 @@
-import { hackathonDemo } from "./hackathon-demo";
+import { demoDataset } from "./demo";
 
-export const seedDatasets = {
-  demo: hackathonDemo,
+export const datasets = {
+  demo: demoDataset,
 };
 
-export type SeedDatasetName = keyof typeof seedDatasets;
+export type SeedDatasetName = keyof typeof datasets;

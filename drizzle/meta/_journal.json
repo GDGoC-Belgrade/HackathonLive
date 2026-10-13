@@ -22,6 +22,34 @@
       "when": 1791373952797,
       "tag": "0002_clever_squirrel_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791491224188,
+      "tag": "0003_cool_giant_girl",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791583260692,
+      "tag": "0004_announcements",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791584161240,
+      "tag": "0005_schedule-events",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791585137011,
+      "tag": "0006_mentors",
+      "breakpoints": true
     }
   ]
 }
