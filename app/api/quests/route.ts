@@ -1,19 +1,12 @@
 import { NextResponse } from "next/server";
 
-import { getActiveHackathonQuests } from "@/db/queries/quests";
+import { getActiveHackathonQuests, type QuestDTO } from "@/db/queries/quests";
 
 export async function GET() {
   try {
     const quests = await getActiveHackathonQuests();
 
-    if (quests === null) {
-      return NextResponse.json(
-        { message: "No active hackathon found" },
-        { status: 404 },
-      );
-    }
-
-    return NextResponse.json(quests);
+    return NextResponse.json<QuestDTO[]>(quests);
   } catch (error) {
     console.error("Failed to fetch quests:", error);
 
