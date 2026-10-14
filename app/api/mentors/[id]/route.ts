@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getMentorById } from "@/db/queries/mentors";
+import { getActiveHackathonMentorById } from "@/db/queries/mentors";
 
 const MAX_POSTGRES_INT = 2147483647;
 
@@ -11,23 +11,34 @@ export async function GET(
     const { id } = await params;
     const mentorId = Number(id);
 
-    if (!Number.isInteger(mentorId) || mentorId <= 0 || mentorId > MAX_POSTGRES_INT) {
+    // Digits only, so values like "1e2", "0x10" or " 5" are rejected
+    if (
+      !/^\d+$/.test(id) ||
+      !Number.isInteger(mentorId) ||
+      mentorId <= 0 ||
+      mentorId > MAX_POSTGRES_INT
+    ) {
       return NextResponse.json(
         { message: "Invalid mentor ID" },
         { status: 400 },
       );
     }
 
-    const mentor = await getMentorById(mentorId);
+    const result = await getActiveHackathonMentorById(mentorId);
 
-    if (!mentor) {
+    if ("error" in result) {
       return NextResponse.json(
-        { message: "Mentor not found" },
+        {
+          message:
+            result.error === "NO_ACTIVE_HACKATHON"
+              ? "No active hackathon found"
+              : "Mentor not found",
+        },
         { status: 404 },
       );
     }
 
-    return NextResponse.json(mentor);
+    return NextResponse.json(result.mentor);
   } catch (error) {
     console.error("Failed to fetch mentor:", error);
 
