@@ -53,6 +53,14 @@ npm run dev
 
 Aplikacija će biti dostupna na http://localhost:3000.
 
+## Testovi
+
+Pokretanje testova:
+
+```bash
+npm run test
+```
+
 ## Production
 
 Za proveru production build-a:

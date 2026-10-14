@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
 import { db } from "../index";
 import { scheduleEvents } from "../schema";
@@ -14,5 +14,6 @@ export async function getScheduleEventsForActiveHackathon() {
   return db
     .select()
     .from(scheduleEvents)
-    .where(eq(scheduleEvents.hackathonId, activeHackathon.id));
+    .where(eq(scheduleEvents.hackathonId, activeHackathon.id))
+    .orderBy(asc(scheduleEvents.startTime));
 }
