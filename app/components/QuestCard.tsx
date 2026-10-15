@@ -6,8 +6,15 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
-import type { Quest } from "@/data/mockQuests";
 
+// Oblik jednog questa koji vraća GET /api/quests
+export interface Quest {
+  id: number;
+  title: string;
+  category: string;
+  description: string | null;
+  googleFormUrl: string;
+}
 
 const THEMES: { bg: string; text: string; border: string }[] = [
   { bg: "bg-brand-blue/10", text: "text-brand-blue", border: "border-brand-blue" },
@@ -15,11 +22,12 @@ const THEMES: { bg: string; text: string; border: string }[] = [
   { bg: "bg-brand-yellow/10", text: "text-brand-yellow", border: "border-brand-yellow" },
   { bg: "bg-brand-green/10", text: "text-brand-green", border: "border-brand-green" },
 ];
+// Ključevi prate kategorije iz baze (mala slova)
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  Social: Users,
-  Networking: Coffee,
-  Challenge: Bug,
-  Feedback: MessageSquare,
+  social: Users,
+  networking: Coffee,
+  technical: Bug,
+  feedback: MessageSquare,
 };
 const DEFAULT_ICON: LucideIcon = Flag;
 
@@ -30,7 +38,7 @@ interface QuestCardProps {
 
 export function QuestCard({ quest, index }: QuestCardProps) {
   const theme = THEMES[index % THEMES.length];
-  const Icon = CATEGORY_ICONS[quest.category] ?? DEFAULT_ICON;
+  const Icon = CATEGORY_ICONS[quest.category.toLowerCase()] ?? DEFAULT_ICON;
 
   return (
     <a
@@ -45,10 +53,13 @@ export function QuestCard({ quest, index }: QuestCardProps) {
         <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1">
-        <h3 className="font-semibold text-gray-900">{quest.title}</h3>
-        <p className="mt-1 text-sm leading-5 text-gray-600">
-          {quest.description}
-        </p>
+        <p className={`text-xs font-semibold uppercase ${theme.text}`}>{quest.category}</p>
+        <h3 className="font-semibold text-gray-900 break-words">{quest.title}</h3>
+        {quest.description && (
+          <p className="mt-1 text-sm leading-5 text-gray-600 break-words">
+            {quest.description}
+          </p>
+        )}
         <span
           className={`mt-3 flex w-full items-center justify-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium ${theme.bg} ${theme.text}`}
         >
