@@ -23,6 +23,7 @@ export const MentorAvatar = ({ name, imageUrl, size, className = '' }: Props) =>
         alt={name}
         width={size}
         height={size}
+        unoptimized
         className={`shrink-0 rounded-full object-cover ${className}`}
       />
     );
