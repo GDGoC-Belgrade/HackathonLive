@@ -2,7 +2,6 @@ import { CalendarDays, Megaphone, Wifi, type LucideIcon } from "lucide-react";
 
 export type AnnouncementType = "info" | "warning" | "important";
 
-// Icons and colors match the Home dashboard card (components/home/AnnouncementCard.tsx)
 export const announcementStyles: Record<
   AnnouncementType,
   { label: string; icon: LucideIcon; card: string; iconBox: string; text: string; badge: string }

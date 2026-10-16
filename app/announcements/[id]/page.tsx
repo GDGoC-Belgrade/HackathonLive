@@ -4,7 +4,6 @@ import { ArrowLeft } from "lucide-react";
 import { getActiveAnnouncementById } from "@/db/queries/announcements";
 import { announcementStyles, formatAnnouncementDate } from "@/app/components/announcementStyles";
 
-// Reads the DB per request: announcements can expire during the event
 export const dynamic = "force-dynamic";
 
 const MAX_POSTGRES_INT = 2147483647;
@@ -13,8 +12,7 @@ export default async function AnnouncementDetailsPage({ params }: PageProps<"/an
   const { id } = await params;
   const announcementId = Number(id);
 
-  // Canonical ids only: Number() would also accept "07", "7.0" and "0x7" as aliases of 7
-  if (!/^[1-9]\d*$/.test(id) ||announcementId > MAX_POSTGRES_INT) {
+  if (!/^[1-9]\d*$/.test(id) || announcementId > MAX_POSTGRES_INT) {
     notFound();
   }
 
@@ -29,7 +27,6 @@ export default async function AnnouncementDetailsPage({ params }: PageProps<"/an
 
   return (
     <div className="mx-auto max-w-md text-gray-900">
-      {/* Always goes to the list, so it also works when the page is opened from a shared link */}
       <Link
         href="/announcements"
         className="-ml-2 mb-4 flex w-fit items-center gap-1 rounded-full px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"

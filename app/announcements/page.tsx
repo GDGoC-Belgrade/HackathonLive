@@ -3,11 +3,9 @@ import { ArrowLeft } from "lucide-react";
 import { getActiveAnnouncements } from "@/db/queries/announcements";
 import { AnnouncementCard } from "@/app/components/AnnouncementCard";
 
-// Reads the DB per request: announcements change during the event
 export const dynamic = "force-dynamic";
 
 export default async function AnnouncementsPage() {
-  // null means there is no active hackathon
   const announcements = (await getActiveAnnouncements()) ?? [];
 
   return (
