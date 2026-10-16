@@ -1,16 +1,7 @@
+import { formatTime } from '@/lib/time';
+import { ScheduleEvent } from '@/lib/types/schedule';
 import { Megaphone, Utensils, Code, Trophy, MapPin, type LucideIcon } from 'lucide-react';
 
-export type ScheduleEventType = "ceremony" | "workshop" | "meal" | "deadline" | "other";
-
-export interface ScheduleEvent {
-  id: number;
-  title: string;
-  startTime: string;
-  endTime: string;
-  location: string;
-  description?: string;
-  type: ScheduleEventType;
-}
 
 type EventType = ScheduleEvent['type'];
 const cardColorMap: Record<EventType, string> = {
@@ -47,21 +38,13 @@ export const ScheduleEventCard = ({ event }: Props) => {
   const iconColor = iconColorMap[theme];
   const Icon = iconMap[theme];
 
-  const formatDate = (iso: string) =>{
-    return new Date(iso).toLocaleTimeString('en-US',{
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-      timeZone: 'Europe/Belgrade'
-    })
-  };
 
   return (
     <div className={`flex items-center gap-3 rounded-2xl p-4 shadow-sm text-gray-900 ${cardBg}`}>
       <Icon className={`h-6 w-6 shrink-0 ${iconColor}`} aria-hidden="true" />
       <div className="min-w-0">
         <p className="whitespace-nowrap text-xs font-semibold text-gray-600">
-          {formatDate(event.startTime)}
+          {formatTime(event.startTime)}
         </p>
         <h3 className="font-semibold break-words">{event.title}</h3>
         <p className="text-sm text-gray-600 break-words">({event.location})</p>
