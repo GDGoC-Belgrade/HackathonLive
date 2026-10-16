@@ -23,7 +23,8 @@ export async function getActiveAnnouncements() {
         ),
       ),
     )
-    .orderBy(desc(announcements.createdAt));
+    .orderBy(desc(announcements.createdAt))
+    .limit(3);
 }
 
 export async function getActiveAnnouncementById(id: number) {
