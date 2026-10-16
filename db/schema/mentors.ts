@@ -23,3 +23,5 @@ export const mentors = pgTable("mentors", {
 
   email: varchar("email", { length: 255 }).notNull(),
 });
+
+export type Mentor = typeof mentors.$inferSelect;

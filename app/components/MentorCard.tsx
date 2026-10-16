@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Mail, Tag } from 'lucide-react';
-import { Mentor } from '@/data/mockMentors';
+import type { Mentor } from '@/db/schema';
 import { MentorAvatar } from '@/app/components/MentorAvatar';
 
 export type MentorCardColor = 'blue' | 'yellow' | 'red' | 'green';
@@ -46,10 +46,10 @@ export const MentorCard = ({ mentor, color = 'blue' }: Props) => {
       )}
 
       <div className="mt-3 flex w-full flex-col gap-1.5 text-left text-sm">
-        {mentor.topics && mentor.topics.length > 0 && (
+        {mentor.bio && (
           <div className="flex items-center gap-2">
             <Tag className={`h-4 w-4 shrink-0 ${iconColor}`} aria-hidden="true" />
-            <span className="truncate">{mentor.topics.join(', ')}</span>
+            <span className="truncate">{mentor.bio}</span>
           </div>
         )}
         <a

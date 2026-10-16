@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 interface Props {
   name: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   size: number;
   className?: string;
 }

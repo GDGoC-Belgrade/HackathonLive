@@ -1,31 +1,60 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { ArrowLeft, Mail, Phone } from 'lucide-react';
-import { getMockMentorById, mockMentors } from '@/data/mockMentors';
+import type { Mentor } from '@/db/schema';
 import { MentorAvatar } from '@/app/components/MentorAvatar';
 
-export function generateStaticParams() {
-  return mockMentors.map((mentor) => ({ id: String(mentor.id) }));
-}
+// Always goes to the list, so it also works when the page is opened from a shared link
+const BackLink = () => (
+  <Link
+    href="/mentors"
+    className="-ml-2 mb-4 inline-flex items-center gap-1 rounded-full px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
+  >
+    <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+    All mentors
+  </Link>
+);
 
-export default async function MentorDetailsPage({ params }: PageProps<'/mentors/[id]'>) {
-  const { id } = await params;
-  const mentor = getMockMentorById(Number(id));
+export default function MentorDetailsPage() {
+  const { id } = useParams<{ id: string }>();
+  // null = još se učitava
+  const [mentor, setMentor] = useState<Mentor | null>(null);
+  const [error, setError] = useState<'not-found' | 'failed' | null>(null);
+
+  useEffect(() => {
+    fetch(`/api/mentors/${id}`)
+      .then((res) => {
+        // 400 = neispravan ID, 404 = mentor ne postoji
+        if (res.status === 400 || res.status === 404) throw new Error('not-found');
+        if (!res.ok) throw new Error('failed');
+        return res.json();
+      })
+      .then(setMentor)
+      .catch((err: Error) => setError(err.message === 'not-found' ? 'not-found' : 'failed'));
+  }, [id]);
 
   if (!mentor) {
-    notFound();
+    const message =
+      error === 'not-found'
+        ? 'Mentor not found.'
+        : error
+          ? "Couldn't load mentor."
+          : 'Loading mentor...';
+
+    return (
+      <div className="mx-auto max-w-md text-gray-900">
+        <BackLink />
+        <p className="text-sm text-gray-600">{message}</p>
+      </div>
+    );
   }
 
   return (
     <div className="mx-auto max-w-md text-gray-900">
-      {/* Always goes to the list, so it also works when the page is opened from a shared link */}
-      <Link
-        href="/mentors"
-        className="-ml-2 mb-4 inline-flex items-center gap-1 rounded-full px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
-      >
-        <ArrowLeft className="h-5 w-5" aria-hidden="true" />
-        All mentors
-      </Link>
+      <BackLink />
 
       <div className="flex flex-col items-center text-center">
         <MentorAvatar name={mentor.name} imageUrl={mentor.imageUrl} size={112} className="mb-4" />
@@ -33,18 +62,6 @@ export default async function MentorDetailsPage({ params }: PageProps<'/mentors/
         <p className="mt-1 text-gray-600">{mentor.role}</p>
         {mentor.company && (
           <p className="mt-1 font-medium text-brand-green">{mentor.company}</p>
-        )}
-        {mentor.topics && mentor.topics.length > 0 && (
-          <ul className="mt-3 flex flex-wrap justify-center gap-2">
-            {mentor.topics.map((topic) => (
-              <li
-                key={topic}
-                className="rounded-full bg-brand-yellow/15 px-3 py-1 text-xs font-medium text-gray-700"
-              >
-                {topic}
-              </li>
-            ))}
-          </ul>
         )}
       </div>
 
