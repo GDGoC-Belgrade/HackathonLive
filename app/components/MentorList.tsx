@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Search } from 'lucide-react';
-import { Mentor } from '@/data/mockMentors';
+import type { Mentor } from '@/db/schema';
 import { MentorCard, MentorCardColor } from '@/app/components/MentorCard';
 
 const CARD_COLORS: MentorCardColor[] = ['blue', 'yellow', 'red', 'green'];
@@ -16,7 +16,7 @@ export const MentorList = ({ mentors }: Props) => {
 
   const normalizedQuery = query.trim().toLowerCase();
   const filteredMentors = mentors.filter((mentor) =>
-    [mentor.name, mentor.role, mentor.company, ...(mentor.topics ?? [])]
+    [mentor.name, mentor.role, mentor.company, mentor.bio]
       .filter((value): value is string => Boolean(value))
       .some((value) => value.toLowerCase().includes(normalizedQuery)),
   );

@@ -1,19 +1,45 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { ArrowLeft, Mail, Phone } from 'lucide-react';
-import { getMockMentorById, mockMentors } from '@/data/mockMentors';
+import type { Mentor } from '@/db/schema';
 import { MentorAvatar } from '@/app/components/MentorAvatar';
 
-export function generateStaticParams() {
-  return mockMentors.map((mentor) => ({ id: String(mentor.id) }));
+export const dynamic = 'force-dynamic';
+
+async function getMentor(id: string): Promise<Mentor | null> {
+  const baseUrl = process.env.API_BASE_URL ?? 'http://localhost:3000';
+  try {
+    const res = await fetch(`${baseUrl}/api/mentors/${encodeURIComponent(id)}`, { cache: 'no-store' });
+    if (res.status === 400 || res.status === 404) {
+      return null;
+    }
+    if (!res.ok) {
+      console.error(`GET /api/mentors/${id} bad result: ${res.status}`);
+      return null;
+    }
+    return res.json();
+  } catch (err) {
+    console.error(`GET /api/mentors/${id} error:`, err);
+    return null;
+  }
 }
 
 export default async function MentorDetailsPage({ params }: PageProps<'/mentors/[id]'>) {
   const { id } = await params;
-  const mentor = getMockMentorById(Number(id));
+  const mentor = await getMentor(id);
 
   if (!mentor) {
-    notFound();
+    return (
+      <div className="mx-auto max-w-md text-gray-900">
+        <Link
+          href="/mentors"
+          className="-ml-2 mb-4 inline-flex items-center gap-1 rounded-full px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
+        >
+          <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+          All mentors
+        </Link>
+        <p className="text-sm text-gray-600">Mentor not found.</p>
+      </div>
+    );
   }
 
   return (
@@ -33,18 +59,6 @@ export default async function MentorDetailsPage({ params }: PageProps<'/mentors/
         <p className="mt-1 text-gray-600">{mentor.role}</p>
         {mentor.company && (
           <p className="mt-1 font-medium text-brand-green">{mentor.company}</p>
-        )}
-        {mentor.topics && mentor.topics.length > 0 && (
-          <ul className="mt-3 flex flex-wrap justify-center gap-2">
-            {mentor.topics.map((topic) => (
-              <li
-                key={topic}
-                className="rounded-full bg-brand-yellow/15 px-3 py-1 text-xs font-medium text-gray-700"
-              >
-                {topic}
-              </li>
-            ))}
-          </ul>
         )}
       </div>
 
