@@ -1,60 +1,57 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import { ArrowLeft, Mail, Phone } from 'lucide-react';
 import type { Mentor } from '@/db/schema';
 import { MentorAvatar } from '@/app/components/MentorAvatar';
 
-// Always goes to the list, so it also works when the page is opened from a shared link
-const BackLink = () => (
-  <Link
-    href="/mentors"
-    className="-ml-2 mb-4 inline-flex items-center gap-1 rounded-full px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
-  >
-    <ArrowLeft className="h-5 w-5" aria-hidden="true" />
-    All mentors
-  </Link>
-);
+export const dynamic = 'force-dynamic';
 
-export default function MentorDetailsPage() {
-  const { id } = useParams<{ id: string }>();
-  // null = još se učitava
-  const [mentor, setMentor] = useState<Mentor | null>(null);
-  const [error, setError] = useState<'not-found' | 'failed' | null>(null);
+async function getMentor(id: string): Promise<Mentor | null> {
+  const baseUrl = process.env.API_BASE_URL ?? 'http://localhost:3000';
+  try {
+    const res = await fetch(`${baseUrl}/api/mentors/${encodeURIComponent(id)}`, { cache: 'no-store' });
+    if (res.status === 400 || res.status === 404) {
+      return null;
+    }
+    if (!res.ok) {
+      console.error(`GET /api/mentors/${id} bad result: ${res.status}`);
+      return null;
+    }
+    return res.json();
+  } catch (err) {
+    console.error(`GET /api/mentors/${id} error:`, err);
+    return null;
+  }
+}
 
-  useEffect(() => {
-    fetch(`/api/mentors/${id}`)
-      .then((res) => {
-        // 400 = neispravan ID, 404 = mentor ne postoji
-        if (res.status === 400 || res.status === 404) throw new Error('not-found');
-        if (!res.ok) throw new Error('failed');
-        return res.json();
-      })
-      .then(setMentor)
-      .catch((err: Error) => setError(err.message === 'not-found' ? 'not-found' : 'failed'));
-  }, [id]);
+export default async function MentorDetailsPage({ params }: PageProps<'/mentors/[id]'>) {
+  const { id } = await params;
+  const mentor = await getMentor(id);
 
   if (!mentor) {
-    const message =
-      error === 'not-found'
-        ? 'Mentor not found.'
-        : error
-          ? "Couldn't load mentor."
-          : 'Loading mentor...';
-
     return (
       <div className="mx-auto max-w-md text-gray-900">
-        <BackLink />
-        <p className="text-sm text-gray-600">{message}</p>
+        <Link
+          href="/mentors"
+          className="-ml-2 mb-4 inline-flex items-center gap-1 rounded-full px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
+        >
+          <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+          All mentors
+        </Link>
+        <p className="text-sm text-gray-600">Mentor not found.</p>
       </div>
     );
   }
 
   return (
     <div className="mx-auto max-w-md text-gray-900">
-      <BackLink />
+      {/* Always goes to the list, so it also works when the page is opened from a shared link */}
+      <Link
+        href="/mentors"
+        className="-ml-2 mb-4 inline-flex items-center gap-1 rounded-full px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
+      >
+        <ArrowLeft className="h-5 w-5" aria-hidden="true" />
+        All mentors
+      </Link>
 
       <div className="flex flex-col items-center text-center">
         <MentorAvatar name={mentor.name} imageUrl={mentor.imageUrl} size={112} className="mb-4" />
