@@ -1,5 +1,6 @@
 import { ScheduleEventCard } from '@/app/components/ScheduleEvent';
 import { getScheduleEvents } from '@/lib/services/schedule';
+export const dynamic = 'force-dynamic';
 
 export default async function SchedulePage() {
   const events = await getScheduleEvents();
