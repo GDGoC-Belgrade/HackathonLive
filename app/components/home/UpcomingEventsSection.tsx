@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
-import { ScheduleEvent } from '@/data/mockSchedule';
+import { ScheduleEvent } from '@/lib/types/schedule';
 import { ScheduleEventCard } from '@/app/components/ScheduleEvent';
 
 interface Props {

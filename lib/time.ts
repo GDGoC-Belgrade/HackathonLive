@@ -12,3 +12,12 @@ export function timeUntil(date: Date): string {
   const minutes = Math.ceil((date.getTime() - Date.now()) / 60_000);
   return minutes > 0 ? `in ${minutes} mins` : 'now';
 }
+
+export function formatTime(time: string): string{
+    return new Date(time).toLocaleTimeString('en-US',{
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Europe/Belgrade'
+    })
+  };
