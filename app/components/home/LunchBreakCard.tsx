@@ -1,5 +1,5 @@
 import { Utensils } from 'lucide-react';
-import { LunchBreak } from '@/data/mockHome';
+import { LunchBreak } from '@/lib/types/home';
 import { timeUntil } from '@/lib/time';
 
 interface Props {

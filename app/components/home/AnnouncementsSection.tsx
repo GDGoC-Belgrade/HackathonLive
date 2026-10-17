@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Announcement } from '@/data/mockHome';
+import { Announcement } from '@/lib/types/home';
 import { AnnouncementCard } from './AnnouncementCard';
 
 interface Props {
