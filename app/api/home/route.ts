@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getActiveHackathon } from "@/db/queries/hackathons";
-import { getActiveAnnouncements } from "@/db/queries/announcements";
+import { getLatestActiveAnnouncements } from "@/db/queries/announcements";
 import { getLunchBreaksForActiveHackathon } from "@/db/queries/lunch-breaks";
 import { getNextUpcomingEvent } from "@/db/queries/schedule-events";
 
@@ -19,7 +19,7 @@ export async function GET() {
     const [upcomingEvent, lunchBreaks, announcements] = await Promise.all([
       getNextUpcomingEvent(hackathon.id),
       getLunchBreaksForActiveHackathon(),
-      getActiveAnnouncements(),
+      getLatestActiveAnnouncements(),
     ]);
 
     return NextResponse.json({
