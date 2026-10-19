@@ -32,6 +32,18 @@ interface Props {
   event: ScheduleEvent;
 }
 
+export function formatEventTime(dateString: string): string {
+  const date = new Date(dateString);
+
+  return date.toLocaleDateString('en-US', {
+    weekday: 'short', // Vraća "Mon", "Tue", "Wed", itd.
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  }); // Rezultat: "Mon, 3:00 PM"
+}
+
+
 export const ScheduleEventCard = ({ event }: Props) => {
   const theme: EventType = event.type;
   const cardBg = cardColorMap[theme];
@@ -44,7 +56,7 @@ export const ScheduleEventCard = ({ event }: Props) => {
       <Icon className={`h-6 w-6 shrink-0 ${iconColor}`} aria-hidden="true" />
       <div className="min-w-0">
         <p className="whitespace-nowrap text-xs font-semibold text-gray-600">
-          {formatTime(event.startTime)}
+          {formatEventTime(event.startTime)}
         </p>
         <h3 className="font-semibold break-words">{event.title}</h3>
         <p className="text-sm text-gray-600 break-words">({event.location})</p>
