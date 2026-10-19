@@ -1,27 +1,11 @@
 import Link from 'next/link';
 import { ArrowLeft, Mail, Phone } from 'lucide-react';
-import type { Mentor } from '@/db/schema';
+import { getMentor } from '@/lib/services/mentors'
 import { MentorAvatar } from '@/app/components/MentorAvatar';
 
 export const dynamic = 'force-dynamic';
 
-async function getMentor(id: string): Promise<Mentor | null> {
-  const baseUrl = process.env.API_BASE_URL ?? 'http://localhost:3000';
-  try {
-    const res = await fetch(`${baseUrl}/api/mentors/${encodeURIComponent(id)}`, { cache: 'no-store' });
-    if (res.status === 400 || res.status === 404) {
-      return null;
-    }
-    if (!res.ok) {
-      console.error(`GET /api/mentors/${id} bad result: ${res.status}`);
-      return null;
-    }
-    return res.json();
-  } catch (err) {
-    console.error(`GET /api/mentors/${id} error:`, err);
-    return null;
-  }
-}
+
 
 export default async function MentorDetailsPage({ params }: PageProps<'/mentors/[id]'>) {
   const { id } = await params;

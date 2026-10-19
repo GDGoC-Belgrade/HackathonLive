@@ -1,4 +1,5 @@
 import type { ScheduleEvent } from './schedule';
+import type { Announcement } from './announcements';
 
 export type AnnouncementType = 'info' | 'warning' | 'important';
 
@@ -19,15 +20,6 @@ export interface LunchBreak {
   location: string;
   startTime: Date;
   endTime: Date;
-}
-
-export interface Announcement {
-  id: number;
-  title: string;
-  message: string;
-  type: AnnouncementType;
-  createdAt: Date;
-  expiresAt: Date | null;
 }
 
 export interface HomeData {
