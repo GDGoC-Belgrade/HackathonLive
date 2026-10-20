@@ -1,5 +1,5 @@
 import { CalendarDays, Megaphone, Wifi, type LucideIcon } from 'lucide-react';
-import { Announcement, AnnouncementType } from '@/lib/types/home';
+import { AnnouncementType, Announcement } from '@/lib/types/announcements'
 import { timeAgo } from '@/lib/time';
 
 const themeMap: Record<AnnouncementType, { icon: LucideIcon; text: string; bg: string }> = {

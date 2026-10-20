@@ -1,8 +1,6 @@
 import type { ScheduleEvent } from './schedule';
 import type { Announcement } from './announcements';
 
-export type AnnouncementType = 'info' | 'warning' | 'important';
-
 export interface Hackathon {
   id: number;
   name: string;
