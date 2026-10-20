@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Announcement } from '@/lib/types/home';
+import { Announcement } from '@/lib/types/announcements';
 import { AnnouncementCard } from './AnnouncementCard';
 
 interface Props {
