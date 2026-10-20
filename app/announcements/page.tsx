@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { getActiveAnnouncements } from "@/db/queries/announcements";
+import { getAnnouncements } from "@/lib/services/announcements";
 import { AnnouncementCard } from "@/app/components/AnnouncementCard";
 
 export const dynamic = "force-dynamic";
 
 export default async function AnnouncementsPage() {
-  const announcements = (await getActiveAnnouncements()) ?? [];
+  const announcements = (await getAnnouncements()) ?? [];
 
   return (
     <div className="mx-auto max-w-md text-gray-900">

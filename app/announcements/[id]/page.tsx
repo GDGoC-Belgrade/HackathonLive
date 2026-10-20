@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { getActiveAnnouncementById } from "@/db/queries/announcements";
+import { getAnnouncement } from "@/lib/services/announcements";
 import { announcementStyles, formatAnnouncementDate } from "@/app/components/announcementStyles";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +16,7 @@ export default async function AnnouncementDetailsPage({ params }: PageProps<"/an
     notFound();
   }
 
-  const announcement = await getActiveAnnouncementById(announcementId);
+  const announcement = await getAnnouncement(id);
 
   if (!announcement) {
     notFound();
