@@ -1,5 +1,6 @@
 import type { ScheduleEvent } from '@/lib/types/schedule';
-import type { Announcement, HomeData, Hackathon, LunchBreak } from '@/lib/types/home';
+import type { HomeData, Hackathon, LunchBreak } from '@/lib/types/home';
+import type { Announcement } from '@/lib/types/announcements';
 
 // Oblik JSON-a koji vraća /api/home: datumi stižu kao tekst
 interface HomeResponse {
