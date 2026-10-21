@@ -29,7 +29,7 @@ export async function GET() {
       },
       upcomingEvent,
       lunchBreaks,
-      announcements,
+      announcements: announcements ?? [],
     });
   } catch (error) {
     console.error("Failed to fetch home data:", error);
