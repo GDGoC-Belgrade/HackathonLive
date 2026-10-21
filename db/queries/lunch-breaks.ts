@@ -8,7 +8,7 @@ export async function getLunchBreaksForActiveHackathon() {
   const hackathon = await getActiveHackathon();
 
   if (!hackathon) {
-    return [];
+    return null;
   }
 
   return db

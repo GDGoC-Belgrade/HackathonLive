@@ -60,7 +60,12 @@ describe("GET /api/schedule", () => {
     const data = await response.json();
 
     expect(response.status).toBe(404);
-    expect(data).toEqual({ message: "No active hackathon found" });
+    expect(data).toEqual({
+      error: {
+        code: "NO_ACTIVE_HACKATHON",
+        message: "No active hackathon found",
+      },
+    });
   });
 
   it("returns empty array when active hackathon has no events", async () => {
@@ -115,6 +120,11 @@ describe("GET /api/schedule", () => {
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data).toEqual({ message: "Internal server error" });
+    expect(data).toEqual({
+      error: {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal server error",
+      },
+    });
   });
 });
