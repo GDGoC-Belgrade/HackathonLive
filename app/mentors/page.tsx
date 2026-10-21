@@ -1,11 +1,12 @@
-import { getMentors } from '@/lib/services/mentors'
+import { Users } from 'lucide-react';
+import { getMentors } from '@/lib/services/mentors';
 import { MentorList } from '@/app/components/MentorList';
+import { StateMessage } from '@/app/components/StateMessage';
 
 export const dynamic = 'force-dynamic';
 
-
-
 export default async function MentorsPage() {
+  // Loading and failed requests are handled by loading.tsx and error.tsx
   const mentors = await getMentors();
 
   return (
@@ -14,7 +15,11 @@ export default async function MentorsPage() {
       {mentors.length > 0 ? (
         <MentorList mentors={mentors} />
       ) : (
-        <p className="text-sm text-gray-600">No mentors available yet.</p>
+        <StateMessage
+          icon={Users}
+          title="No mentors yet"
+          description="Mentors for this hackathon will show up here once they are announced."
+        />
       )}
     </div>
   );
