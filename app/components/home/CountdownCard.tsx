@@ -37,18 +37,24 @@ export const CountdownCard = ({ endDate }: Props) => {
     return () => clearInterval(interval);
   }, [endDate]);
 
+  const isEnded = timeLeft !== null && timeLeft.hours === 0 && timeLeft.mins === 0 && timeLeft.secs === 0;
+
   return (
     <section className="overflow-hidden rounded-2xl bg-gray-50 shadow-sm">
       <div className="h-1 bg-gradient-to-r from-brand-blue via-brand-red to-brand-yellow" />
       <div className="p-5">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold tracking-wide text-gray-600 uppercase">Time Remaining</h2>
-          <span className="flex items-center gap-1 rounded-full bg-brand-green/10 px-2 py-0.5 text-xs font-semibold text-brand-green">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-            LIVE
-          </span>
+          {isEnded ? (
+            <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs font-semibold text-gray-600">ENDED</span>
+          ) : (
+            <span className="flex items-center gap-1 rounded-full bg-brand-green/10 px-2 py-0.5 text-xs font-semibold text-brand-green">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
+              LIVE
+            </span>
+          )}
         </div>
-        <div className="flex items-center justify-between text-gray-900">
+        <div className="flex items-center justify-between gap-1 text-gray-900" role="timer" aria-label="Time remaining">
           <TimeUnit value={timeLeft?.hours ?? null} label="HOURS" />
           <Separator />
           <TimeUnit value={timeLeft?.mins ?? null} label="MINS" />
