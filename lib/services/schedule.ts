@@ -1,17 +1,14 @@
 import { ScheduleEvent } from "../types/schedule";
 
+// Baca grešku ako API ne radi, pa stranica može da prikaže error state
+// Prazan niz znači raspored je prazan
 export async function getScheduleEvents(): Promise<ScheduleEvent[]> {
   const baseUrl = process.env.API_BASE_URL ?? "http://localhost:3000";
-  try {
-    const res = await fetch(`${baseUrl}/api/schedule`, { cache: 'no-store' });
-    if (!res.ok) {
-      console.error(`GET /api/schedule bad result: ${res.status}`);
-      return [];
-      //finalni loading/error design out of scope (loading i error.tsx)
-    }
-    return res.json();
-  } catch (err) {
-    console.error("GET /api/schedule error:", err);
-    return [];
+  const res = await fetch(`${baseUrl}/api/schedule`, { cache: "no-store" });
+
+  if (!res.ok) {
+    throw new Error(`GET /api/schedule failed: ${res.status}`);
   }
+
+  return res.json();
 }
