@@ -7,14 +7,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-// Oblik jednog questa koji vraća GET /api/quests
-export interface Quest {
-  id: number;
-  title: string;
-  category: string;
-  description: string | null;
-  googleFormUrl: string;
-}
+import type { Quest } from "@/lib/types/quests";
 
 const THEMES: { bg: string; text: string; border: string }[] = [
   { bg: "bg-brand-blue/10", text: "text-brand-blue", border: "border-brand-blue" },
@@ -22,7 +15,6 @@ const THEMES: { bg: string; text: string; border: string }[] = [
   { bg: "bg-brand-yellow/10", text: "text-brand-yellow", border: "border-brand-yellow" },
   { bg: "bg-brand-green/10", text: "text-brand-green", border: "border-brand-green" },
 ];
-// Ključevi prate kategorije iz baze (mala slova)
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   social: Users,
   networking: Coffee,
