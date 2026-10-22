@@ -9,13 +9,18 @@ export async function GET(
 ){
     try{
         const { id } = await params;
+
+        if (!/^\d+$/.test(id)) {
+        return NextResponse.json(
+                { message: "Invalid announcement id" },
+                { status: 400 }
+            );
+        }
+
         const announcementId = Number(id);
-        if(
-            !Number.isInteger(announcementId) ||
-            announcementId <= 0 ||
-            announcementId > MAX_POSTGRES_INT
-        ){
-            return NextResponse.json(
+
+        if (announcementId <= 0 || announcementId > MAX_POSTGRES_INT) {
+        return NextResponse.json(
                 { message: "Invalid announcement id" },
                 { status: 400 }
             );
