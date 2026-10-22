@@ -12,6 +12,15 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+
+    if (!/^\d+$/.test(id)) {
+      return apiError(
+        "INVALID_ANNOUNCEMENT_ID",
+        "Invalid announcement id",
+        400,
+      );
+    }
+
     const announcementId = Number(id);
 
     if (
