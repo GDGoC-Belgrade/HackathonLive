@@ -28,11 +28,11 @@ export async function getQuestsByHackathonId(
     .orderBy(asc(quests.id));
 }
 
-export async function getActiveHackathonQuests(): Promise<QuestDTO[]> {
+export async function getActiveHackathonQuests(): Promise<QuestDTO[] | null> {
   const hackathon = await getActiveHackathon();
 
   if (!hackathon) {
-    return [];
+    return null;
   }
 
   return getQuestsByHackathonId(hackathon.id);

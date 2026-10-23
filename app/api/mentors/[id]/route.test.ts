@@ -70,7 +70,12 @@ describe("GET /api/mentors/[id]", () => {
     const data = await response.json();
 
     expect(response.status).toBe(400);
-    expect(data).toEqual({ message: "Invalid mentor ID" });
+    expect(data).toEqual({
+      error: {
+        code: "INVALID_MENTOR_ID",
+        message: "Invalid mentor ID",
+      },
+    });
     expect(mockGetMentorById).not.toHaveBeenCalled();
   });
 
@@ -81,7 +86,12 @@ describe("GET /api/mentors/[id]", () => {
     const data = await response.json();
 
     expect(response.status).toBe(404);
-    expect(data).toEqual({ message: "Mentor not found" });
+    expect(data).toEqual({
+      error: {
+        code: "MENTOR_NOT_FOUND",
+        message: "Mentor not found",
+      },
+    });
   });
 
   it("returns 404 when mentor belongs to another hackathon", async () => {
@@ -92,7 +102,12 @@ describe("GET /api/mentors/[id]", () => {
     const data = await response.json();
 
     expect(response.status).toBe(404);
-    expect(data).toEqual({ message: "Mentor not found" });
+    expect(data).toEqual({
+      error: {
+        code: "MENTOR_NOT_FOUND",
+        message: "Mentor not found",
+      },
+    });
   });
 
   it("returns 404 when no active hackathon", async () => {
@@ -102,7 +117,12 @@ describe("GET /api/mentors/[id]", () => {
     const data = await response.json();
 
     expect(response.status).toBe(404);
-    expect(data).toEqual({ message: "No active hackathon found" });
+    expect(data).toEqual({
+      error: {
+        code: "NO_ACTIVE_HACKATHON",
+        message: "No active hackathon found",
+      },
+    });
   });
 
   it("returns 500 on unexpected error", async () => {
@@ -112,6 +132,11 @@ describe("GET /api/mentors/[id]", () => {
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data).toEqual({ message: "Internal server error" });
+    expect(data).toEqual({
+      error: {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal server error",
+      },
+    });
   });
 });

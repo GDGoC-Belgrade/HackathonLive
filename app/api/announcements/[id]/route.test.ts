@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GET } from "@/app/api/announcements/[id]/route";
 
@@ -6,10 +6,27 @@ vi.mock("@/db/queries/announcements", () => ({
   getActiveAnnouncementById: vi.fn(),
 }));
 
+vi.mock("@/db/queries/hackathons", () => ({
+  getActiveHackathon: vi.fn(),
+}));
+
 import { getActiveAnnouncementById } from "@/db/queries/announcements";
+import { getActiveHackathon } from "@/db/queries/hackathons";
 
 const mockGetActiveAnnouncementById = vi.mocked(getActiveAnnouncementById);
+const mockGetActiveHackathon = vi.mocked(getActiveHackathon);
+
 const request = new Request("http://localhost/api/announcements/1");
+
+const mockHackathon = {
+  id: 1,
+  name: "Test Hackathon",
+  description: "Test",
+  startDate: new Date("2026-10-20T09:00:00Z"),
+  endDate: new Date("2026-10-22T18:00:00Z"),
+  location: "Belgrade",
+  status: "active" as const,
+};
 
 const mockAnnouncement = {
   id: 1,
@@ -26,8 +43,9 @@ async function getAnnouncementById(id: string) {
 }
 
 describe("GET /api/announcements/[id]", () => {
-  afterEach(() => {
+  beforeEach(() => {
     vi.clearAllMocks();
+    mockGetActiveHackathon.mockResolvedValue(mockHackathon);
   });
 
   it("returns an existing active announcement", async () => {
@@ -56,7 +74,12 @@ describe("GET /api/announcements/[id]", () => {
       const data = await response.json();
 
       expect(response.status).toBe(400);
-      expect(data).toEqual({ message: "Invalid announcement id" });
+      expect(data).toEqual({
+        error: {
+          code: "INVALID_ANNOUNCEMENT_ID",
+          message: "Invalid announcement id",
+        },
+      });
       expect(mockGetActiveAnnouncementById).not.toHaveBeenCalled();
     },
   );
@@ -68,7 +91,12 @@ describe("GET /api/announcements/[id]", () => {
     const data = await response.json();
 
     expect(response.status).toBe(404);
-    expect(data).toEqual({ message: "Announcement not found" });
+    expect(data).toEqual({
+      error: {
+        code: "ANNOUNCEMENT_NOT_FOUND",
+        message: "Announcement not found",
+      },
+    });
   });
 
   it("returns 404 when the announcement belongs to another hackathon", async () => {
@@ -78,7 +106,12 @@ describe("GET /api/announcements/[id]", () => {
     const data = await response.json();
 
     expect(response.status).toBe(404);
-    expect(data).toEqual({ message: "Announcement not found" });
+    expect(data).toEqual({
+      error: {
+        code: "ANNOUNCEMENT_NOT_FOUND",
+        message: "Announcement not found",
+      },
+    });
   });
 
   it("returns 404 when the announcement has expired", async () => {
@@ -88,7 +121,12 @@ describe("GET /api/announcements/[id]", () => {
     const data = await response.json();
 
     expect(response.status).toBe(404);
-    expect(data).toEqual({ message: "Announcement not found" });
+    expect(data).toEqual({
+      error: {
+        code: "ANNOUNCEMENT_NOT_FOUND",
+        message: "Announcement not found",
+      },
+    });
   });
 
   it("returns 500 when fetching the announcement fails", async () => {
@@ -100,6 +138,11 @@ describe("GET /api/announcements/[id]", () => {
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data).toEqual({ message: "Internal server error" });
+    expect(data).toEqual({
+      error: {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal server error",
+      },
+    });
   });
 });
