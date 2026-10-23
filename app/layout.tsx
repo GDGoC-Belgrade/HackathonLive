@@ -19,6 +19,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
   viewportFit: "cover",
 };
 
@@ -28,9 +30,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body>
-        <div className="mx-auto min-h-screen w-full max-w-md bg-white shadow-md">
-          <main className="p-4 pb-[calc(var(--nav-height)+env(safe-area-inset-bottom))]">{children}</main>
+      <body className="min-h-dvh" >
+        <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-white shadow-md">
+          <main className="min-w-0 flex-1 p-4 pb-[calc(var(--nav-height)+env(safe-area-inset-bottom)+1rem)]">{children}</main>
           <NavMenu/>
         </div>
       </body>
