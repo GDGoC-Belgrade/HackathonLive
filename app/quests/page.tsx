@@ -1,5 +1,5 @@
-import { QuestCard, type Quest } from "@/app/components/QuestCard";
 
+import { QuestCard } from "@/app/components/QuestCard";
 import { getQuests } from "@/lib/services/quests"
 
 export const dynamic = "force-dynamic";
