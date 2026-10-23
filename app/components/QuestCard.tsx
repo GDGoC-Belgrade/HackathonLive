@@ -11,7 +11,6 @@ import {
 import { isValidGoogleFormUrl } from "@/lib/google-form-url";
 import type { Quest } from "@/lib/types/quests";
 
-// Redosled boja prati dizajn: plava, žuta, crvena, zelena
 const THEMES: { bg: string; text: string; border: string }[] = [
   { bg: "bg-brand-blue/10", text: "text-brand-blue", border: "border-brand-blue" },
   { bg: "bg-brand-yellow/10", text: "text-brand-yellow", border: "border-brand-yellow" },
@@ -78,7 +77,6 @@ export function QuestCard({ quest, index }: QuestCardProps) {
     </>
   );
 
-  // Bez validnog linka kartica nije klikabilna, pa se ne otvara prazna/pogrešna stranica
   if (!hasValidLink) {
     return <div className={`${CARD_CLASS} ${theme.border}`}>{content}</div>;
   }
