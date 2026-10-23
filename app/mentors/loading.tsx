@@ -8,7 +8,7 @@ export default function MentorsLoading() {
       <h1 className="mb-4 text-2xl font-bold">Connect with Mentors</h1>
       <div className="mb-5 h-12 animate-pulse rounded-full bg-gray-100" />
       <div className="grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-3" aria-hidden="true">
-        {Array.from({ length: 6 }, (_, index) => (
+        {Array.from({ length: 4 }, (_, index) => (
           <div
             key={index}
             className="flex animate-pulse flex-col items-center rounded-2xl border-2 border-gray-100 p-3"

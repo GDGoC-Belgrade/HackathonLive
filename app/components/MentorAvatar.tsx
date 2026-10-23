@@ -1,7 +1,4 @@
-'use client';
-
 import Image from 'next/image';
-import { useState } from 'react';
 
 interface Props {
   name: string;
@@ -30,11 +27,9 @@ const isUsableImageUrl = (url: string) => {
 };
 
 export const MentorAvatar = ({ name, imageUrl, size, className = '' }: Props) => {
-  // Remembers which URL failed, so a new imageUrl gets a fresh attempt
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
   const trimmedUrl = imageUrl?.trim();
 
-  if (trimmedUrl && trimmedUrl !== failedUrl && isUsableImageUrl(trimmedUrl)) {
+  if (trimmedUrl && isUsableImageUrl(trimmedUrl)) {
     return (
       <Image
         src={trimmedUrl}
@@ -42,14 +37,13 @@ export const MentorAvatar = ({ name, imageUrl, size, className = '' }: Props) =>
         width={size}
         height={size}
         unoptimized
-        onError={() => setFailedUrl(trimmedUrl)}
         style={{ width: size, height: size }}
         className={`shrink-0 rounded-full bg-gray-100 object-cover ${className}`}
       />
     );
   }
 
-  // Fallback when a mentor has no photo or it fails to load
+  // Fallback when a mentor has no photo
   return (
     <div
       role="img"

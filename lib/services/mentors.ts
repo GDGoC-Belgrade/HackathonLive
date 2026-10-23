@@ -1,4 +1,4 @@
-import { Mentor } from "../types/mentors";
+import type { Mentor } from "../types/mentors";
 
 // Unlike a missing mentor, a failed request throws so the page's error.tsx can show a retry state.
 export async function getMentors(): Promise<Mentor[]> {
