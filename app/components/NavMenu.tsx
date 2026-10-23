@@ -41,7 +41,7 @@ const NavMenu = () => {
 
   return (
     <nav className="fixed bottom-0 left-1/2 z-50 w-full max-w-md -translate-x-1/2 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)]">
-        <div className="flex justify-around items-center px-2">
+        <div className="flex h-(--nav-height) items-stretch justify-around px-2">
             {ITEMS.map((item)=>{
                 const Icon=item.icon;
                 const isActive = item.href === '/'
@@ -53,7 +53,7 @@ const NavMenu = () => {
                     <Link
                         key={item.href}
                         href={item.href}
-                        className="group flex flex-1 flex-col items-center justify-center py-1"
+                        className="group flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5"
                     >
                         <div
                             className={`flex items-center justify-center w-12 h-7 rounded-full transition-colors ${

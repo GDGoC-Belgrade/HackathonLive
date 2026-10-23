@@ -9,22 +9,36 @@ interface Props {
 
 const getInitials = (name: string) =>
   name
-    .split(' ')
+    .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
     .map((part) => part[0].toUpperCase())
-    .join('');
+    .join('') || '?';
+
+// Only absolute http(s) URLs or app-relative paths are rendered, anything else falls back to initials
+const isUsableImageUrl = (url: string) => {
+  if (url.startsWith('/')) return true;
+  try {
+    const { protocol } = new URL(url);
+    return protocol === 'https:' || protocol === 'http:';
+  } catch {
+    return false;
+  }
+};
 
 export const MentorAvatar = ({ name, imageUrl, size, className = '' }: Props) => {
-  if (imageUrl) {
+  const trimmedUrl = imageUrl?.trim();
+
+  if (trimmedUrl && isUsableImageUrl(trimmedUrl)) {
     return (
       <Image
-        src={imageUrl}
+        src={trimmedUrl}
         alt={name}
         width={size}
         height={size}
         unoptimized
-        className={`shrink-0 rounded-full object-cover ${className}`}
+        style={{ width: size, height: size }}
+        className={`shrink-0 rounded-full bg-gray-100 object-cover ${className}`}
       />
     );
   }
