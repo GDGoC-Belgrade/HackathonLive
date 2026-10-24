@@ -1,12 +1,17 @@
 'use client';
 
-import { useEffect } from 'react';
-import { ErrorState } from '@/app/components/states/ErrorState';
+import { useRouter } from "next/navigation";
+import { ErrorState } from "./components/ui/StateViews";
+import { startTransition } from "react";
 
-export default function Error({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
-  useEffect(() => {
-    console.error(error);
-  }, [error]);
-
-  return <ErrorState onRetry={retry} />;
+export default function Error({ reset }: { error: Error; reset: () => void }) {
+    const router = useRouter();
+    const retry = ()=>{
+        startTransition(()=>{
+            router.refresh();
+            reset();
+        });
+    };
+  
+    return <ErrorState onRetry={retry} />;
 }

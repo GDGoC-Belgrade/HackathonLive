@@ -152,7 +152,12 @@ describe("GET /api/home", () => {
     const data = await response.json();
 
     expect(response.status).toBe(404);
-    expect(data).toEqual({ message: "No active hackathon found" });
+    expect(data).toEqual({
+      error: {
+        code: "NO_ACTIVE_HACKATHON",
+        message: "No active hackathon found",
+      },
+    });
     expect(mockGetNextUpcomingEvent).not.toHaveBeenCalled();
     expect(mockGetLunchBreaks).not.toHaveBeenCalled();
     expect(mockGetLatestActiveAnnouncements).not.toHaveBeenCalled();
@@ -165,7 +170,12 @@ describe("GET /api/home", () => {
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data).toEqual({ message: "Internal server error" });
+    expect(data).toEqual({
+      error: {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal server error",
+      },
+    });
   });
 
   it("returns 500 when an optional home query fails", async () => {
@@ -178,6 +188,11 @@ describe("GET /api/home", () => {
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data).toEqual({ message: "Internal server error" });
+    expect(data).toEqual({
+      error: {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal server error",
+      },
+    });
   });
 });
