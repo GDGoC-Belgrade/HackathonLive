@@ -1,7 +1,6 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import { getAnnouncement } from "@/lib/services/announcements";
+import { BackLink } from "@/app/components/BackLink";
 import { announcementStyles, formatAnnouncementDate } from "@/app/components/announcementStyles";
 
 export const dynamic = "force-dynamic";
@@ -27,13 +26,7 @@ export default async function AnnouncementDetailsPage({ params }: PageProps<"/an
 
   return (
     <div className="mx-auto max-w-md text-gray-900">
-      <Link
-        href="/announcements"
-        className="-ml-2 mb-4 flex w-fit items-center gap-1 rounded-full px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
-      >
-        <ArrowLeft className="h-5 w-5" aria-hidden="true" />
-        All announcements
-      </Link>
+      <BackLink fallbackHref="/announcements" label="Back" />
 
       <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${style.badge}`}>
         {style.label}

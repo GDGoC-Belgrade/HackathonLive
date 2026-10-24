@@ -1,4 +1,4 @@
-import { CalendarDays, Megaphone, Wifi, type LucideIcon } from "lucide-react";
+import { CalendarDays, Megaphone, TriangleAlert, type LucideIcon } from "lucide-react";
 
 export type AnnouncementType = "info" | "warning" | "important";
 
@@ -16,11 +16,11 @@ export const announcementStyles: Record<
   },
   warning: {
     label: "Warning",
-    icon: Wifi,
-    card: "border-brand-green bg-brand-green/5",
-    iconBox: "bg-brand-green/15",
-    text: "text-brand-green",
-    badge: "bg-brand-green/15 text-brand-green",
+    icon: TriangleAlert,
+    card: "border-brand-yellow bg-brand-yellow/10",
+    iconBox: "bg-brand-yellow/25",
+    text: "text-yellow-700",
+    badge: "bg-brand-yellow/25 text-yellow-800",
   },
   important: {
     label: "Important",

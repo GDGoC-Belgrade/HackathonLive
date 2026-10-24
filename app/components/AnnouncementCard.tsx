@@ -25,12 +25,17 @@ export const AnnouncementCard = ({ announcement }: { announcement: AnnouncementC
           href={`/announcements/${announcement.id}`}
           className="block font-semibold after:absolute after:inset-0 after:rounded-2xl"
         >
-          <h3 className="truncate">{announcement.title}</h3>
+          <h3 className="line-clamp-2 break-words">{announcement.title}</h3>
         </Link>
         <p className="mt-0.5 line-clamp-2 break-words text-sm text-gray-600">{announcement.message}</p>
-        <time dateTime={announcement.createdAt.toISOString()} className="mt-1 block text-xs text-gray-500">
-          {formatAnnouncementDate(announcement.createdAt)}
-        </time>
+        <div className="mt-1.5 flex items-center gap-2">
+          <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${style.badge}`}>
+            {style.label}
+          </span>
+          <time dateTime={announcement.createdAt.toISOString()} className="text-xs text-gray-500">
+            {formatAnnouncementDate(announcement.createdAt)}
+          </time>
+        </div>
       </div>
     </div>
   );
