@@ -7,6 +7,7 @@ import { CountdownCard } from '@/app/components/home/CountdownCard';
 import { LunchBreakCard } from '@/app/components/home/LunchBreakCard';
 import { UpcomingEventsSection } from '@/app/components/home/UpcomingEventsSection';
 import { AnnouncementsSection } from '@/app/components/home/AnnouncementsSection';
+import { HomeErrorBoundary } from '@/app/components/home/HomeErrorBoundary';
 import { HomeSkeleton } from '@/app/components/home/HomeSkeleton';
 import { EmptyState } from '@/app/components/states/EmptyState';
 
@@ -40,9 +41,11 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-6 text-gray-900">
       <TopBar />
-      <Suspense fallback={<HomeSkeleton />}>
-        <HomeContent />
-      </Suspense>
+      <HomeErrorBoundary>
+        <Suspense fallback={<HomeSkeleton />}>
+          <HomeContent />
+        </Suspense>
+      </HomeErrorBoundary>
     </div>
   );
 }
