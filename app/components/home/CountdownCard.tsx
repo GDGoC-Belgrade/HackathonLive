@@ -11,7 +11,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
 function getTimeLeft(endDate: Date) {
   const totalSeconds = Math.max(0, Math.floor((endDate.getTime() - Date.now()) / 1000));
   return {
-    hours: Math.floor(totalSeconds / 3600),
+    days: Math.floor(totalSeconds / 86400),
+    hours: Math.floor((totalSeconds % 86400) / 3600),
     mins: Math.floor((totalSeconds % 3600) / 60),
     secs: totalSeconds % 60,
   };
@@ -19,7 +20,7 @@ function getTimeLeft(endDate: Date) {
 
 const TimeUnit = ({ value, label }: { value: number | null; label: string }) => (
   <div className="flex flex-col items-center">
-    <span className="text-4xl font-bold tabular-nums">{value === null ? '--' : pad(value)}</span>
+    <span className="text-3xl font-bold tabular-nums min-[360px]:text-4xl">{value === null ? '--' : pad(value)}</span>
     <span className="text-xs text-gray-500">{label}</span>
   </div>
 );
@@ -37,7 +38,7 @@ export const CountdownCard = ({ endDate }: Props) => {
     return () => clearInterval(interval);
   }, [endDate]);
 
-  const isEnded = timeLeft !== null && timeLeft.hours === 0 && timeLeft.mins === 0 && timeLeft.secs === 0;
+  const isEnded = timeLeft !== null && timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.mins === 0 && timeLeft.secs === 0;
 
   return (
     <section className="overflow-hidden rounded-2xl bg-gray-50 shadow-sm">
@@ -55,6 +56,8 @@ export const CountdownCard = ({ endDate }: Props) => {
           )}
         </div>
         <div className="flex items-center justify-between gap-1 text-gray-900" role="timer" aria-label="Time remaining">
+          <TimeUnit value={timeLeft?.days ?? null} label="DAYS" />
+          <Separator />
           <TimeUnit value={timeLeft?.hours ?? null} label="HOURS" />
           <Separator />
           <TimeUnit value={timeLeft?.mins ?? null} label="MINS" />

@@ -26,7 +26,7 @@ export default async function AnnouncementDetailsPage({ params }: PageProps<"/an
 
   return (
     <div className="mx-auto max-w-md text-gray-900">
-      <BackLink fallbackHref="/announcements" label="All announcements" />
+      <BackLink fallbackHref="/announcements" label="Back" />
 
       <span className={`inline-block rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${style.badge}`}>
         {style.label}

@@ -7,10 +7,18 @@ export function timeAgo(date: Date): string {
   return `${Math.floor(hours / 24)}d ago`;
 }
 
-// "in 15 mins", "now"
+// "in 15 mins", "in 3h 20m", "in 2 days", "now"
 export function timeUntil(date: Date): string {
   const minutes = Math.ceil((date.getTime() - Date.now()) / 60_000);
-  return minutes > 0 ? `in ${minutes} mins` : 'now';
+  if (minutes <= 0) return 'now';
+  if (minutes < 60) return `in ${minutes} mins`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    const rest = minutes % 60;
+    return rest === 0 ? `in ${hours}h` : `in ${hours}h ${rest}m`;
+  }
+  const days = Math.floor(hours / 24);
+  return `in ${days} ${days === 1 ? 'day' : 'days'}`;
 }
 
 export function formatTime(time: string): string{

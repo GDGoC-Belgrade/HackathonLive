@@ -6,7 +6,7 @@ import { EmptyState } from "@/app/components/states/EmptyState";
 export default function AnnouncementNotFound() {
   return (
     <div className="mx-auto max-w-md text-gray-900">
-      <BackLink fallbackHref="/announcements" label="All announcements" />
+      <BackLink fallbackHref="/announcements" label="Back" />
       <EmptyState
         icon={SearchX}
         title="Announcement not found"
