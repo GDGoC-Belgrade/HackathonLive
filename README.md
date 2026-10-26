@@ -55,11 +55,14 @@ Aplikacija će biti dostupna na http://localhost:3000.
 
 ## Testovi
 
-Pokretanje testova:
+Pokretanje svih automatizovanih backend testova:
 
 ```bash
-npm run test
+npm test
 ```
+
+Testovi koriste Vitest i mockuju pristup bazi podataka, tako da nije potrebno
+kreirati `.env` fajl niti pokretati PostgreSQL/Neon bazu.
 
 ## Production
 
