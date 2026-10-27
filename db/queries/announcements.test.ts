@@ -1,21 +1,29 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { PgDialect } from "drizzle-orm/pg-core";
+import type { SQL } from "drizzle-orm";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { db } from "@/db/index";
-import { getActiveHackathon } from "@/db/queries/hackathons";
 import {
   getActiveAnnouncementById,
   getActiveAnnouncements,
   getLatestActiveAnnouncements,
 } from "@/db/queries/announcements";
 
+vi.mock("@/db/index", () => ({
+  db: { select: vi.fn() },
+}));
+
 vi.mock("@/db/queries/hackathons", () => ({
   getActiveHackathon: vi.fn(),
 }));
 
+import { db } from "@/db/index";
+import { getActiveHackathon } from "@/db/queries/hackathons";
+
+const mockSelect = vi.mocked(db.select);
 const mockGetActiveHackathon = vi.mocked(getActiveHackathon);
 
 const activeHackathon = {
-  id: 1,
+  id: 7,
   name: "Test Hackathon",
   description: null,
   startDate: new Date("2026-10-20T09:00:00Z"),
@@ -27,7 +35,7 @@ const activeHackathon = {
 const announcements = [
   {
     id: 2,
-    hackathonId: 1,
+    hackathonId: 7,
     title: "Latest announcement",
     message: "The latest message",
     type: "important" as const,
@@ -36,7 +44,7 @@ const announcements = [
   },
   {
     id: 1,
-    hackathonId: 1,
+    hackathonId: 7,
     title: "Older announcement",
     message: "The older message",
     type: "info" as const,
@@ -45,100 +53,104 @@ const announcements = [
   },
 ];
 
-afterEach(() => {
-  vi.restoreAllMocks();
-  mockGetActiveHackathon.mockReset();
-});
+function mockQuery(rows: unknown[], withOrderLimit = false) {
+  const limit = vi.fn().mockResolvedValue(rows);
+  const orderBy = vi.fn().mockImplementation(() =>
+    withOrderLimit ? { limit } : Promise.resolve(rows),
+  );
+  const where = vi.fn().mockReturnValue({ orderBy, limit });
+  const from = vi.fn().mockReturnValue({ where });
+  mockSelect.mockReturnValue({ from } as never);
+
+  return { where, orderBy, limit };
+}
+
+function whereQuery(where: ReturnType<typeof vi.fn>) {
+  return new PgDialect().sqlToQuery(where.mock.calls[0][0] as SQL);
+}
+
+function orderByQuery(orderBy: ReturnType<typeof vi.fn>) {
+  return orderBy.mock.calls.map(([column]) =>
+    new PgDialect().sqlToQuery(column as SQL).sql,
+  );
+}
 
 describe("announcement queries", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("returns null when there is no active hackathon", async () => {
     mockGetActiveHackathon.mockResolvedValue(null as never);
 
     await expect(getActiveAnnouncements()).resolves.toBeNull();
     await expect(getLatestActiveAnnouncements()).resolves.toBeNull();
     await expect(getActiveAnnouncementById(1)).resolves.toBeNull();
+    expect(mockSelect).not.toHaveBeenCalled();
   });
 
-  it("returns active announcements ordered by newest first", async () => {
+  it("filters announcements by hackathon and excludes expired rows", async () => {
     mockGetActiveHackathon.mockResolvedValue(activeHackathon);
-
-    const mockOrderBy = vi.fn().mockResolvedValue(announcements);
-    const mockWhere = vi.fn().mockReturnValue({ orderBy: mockOrderBy });
-    const mockFrom = vi.fn().mockReturnValue({ where: mockWhere });
-    const mockSelect = vi.fn().mockReturnValue({ from: mockFrom });
-    const originalSelect = db.select;
-    db.select = mockSelect as never;
+    const { where, orderBy } = mockQuery(announcements);
 
     await expect(getActiveAnnouncements()).resolves.toEqual(announcements);
-    expect(mockSelect).toHaveBeenCalledWith();
-    expect(mockFrom).toHaveBeenCalled();
-    expect(mockWhere).toHaveBeenCalled();
-    expect(mockOrderBy).toHaveBeenCalled();
 
-    db.select = originalSelect;
+    const query = whereQuery(where);
+    expect(query.sql).toContain('"announcements"."hackathon_id" =');
+    expect(query.sql).toContain('"announcements"."expires_at" is null');
+    expect(query.sql).toContain('"announcements"."expires_at" >');
+    expect(query.params[0]).toBe(activeHackathon.id);
+    expect(Date.parse(String(query.params[1]))).not.toBeNaN();
+    expect(orderByQuery(orderBy)).toEqual([
+      '"announcements"."created_at" desc',
+    ]);
   });
 
   it("returns an empty array when the active hackathon has no announcements", async () => {
     mockGetActiveHackathon.mockResolvedValue(activeHackathon);
-
-    const mockOrderBy = vi.fn().mockResolvedValue([]);
-    const mockWhere = vi.fn().mockReturnValue({ orderBy: mockOrderBy });
-    const mockFrom = vi.fn().mockReturnValue({ where: mockWhere });
-    const mockSelect = vi.fn().mockReturnValue({ from: mockFrom });
-    const originalSelect = db.select;
-    db.select = mockSelect as never;
+    mockQuery([]);
 
     await expect(getActiveAnnouncements()).resolves.toEqual([]);
-
-    db.select = originalSelect;
   });
 
-  it("limits latest active announcements to three results", async () => {
+  it("limits the latest active announcements to three results", async () => {
     mockGetActiveHackathon.mockResolvedValue(activeHackathon);
-
-    const mockLimit = vi.fn().mockResolvedValue(announcements);
-    const mockOrderBy = vi.fn().mockReturnValue({ limit: mockLimit });
-    const mockWhere = vi.fn().mockReturnValue({ orderBy: mockOrderBy });
-    const mockFrom = vi.fn().mockReturnValue({ where: mockWhere });
-    const mockSelect = vi.fn().mockReturnValue({ from: mockFrom });
-    const originalSelect = db.select;
-    db.select = mockSelect as never;
+    const { where, orderBy, limit } = mockQuery(announcements, true);
 
     await expect(getLatestActiveAnnouncements()).resolves.toEqual(announcements);
-    expect(mockOrderBy).toHaveBeenCalled();
-    expect(mockLimit).toHaveBeenCalledWith(3);
 
-    db.select = originalSelect;
+    expect(whereQuery(where).sql).toContain(
+      '"announcements"."expires_at" >',
+    );
+    expect(orderByQuery(orderBy)).toEqual([
+      '"announcements"."created_at" desc',
+    ]);
+    expect(limit).toHaveBeenCalledWith(3);
   });
 
-  it("returns an active announcement by id", async () => {
+  it("filters announcement details by id, active hackathon, and expiration", async () => {
     mockGetActiveHackathon.mockResolvedValue(activeHackathon);
+    const { where, limit } = mockQuery([announcements[0]]);
 
-    const mockLimit = vi.fn().mockResolvedValue([announcements[0]]);
-    const mockWhere = vi.fn().mockReturnValue({ limit: mockLimit });
-    const mockFrom = vi.fn().mockReturnValue({ where: mockWhere });
-    const mockSelect = vi.fn().mockReturnValue({ from: mockFrom });
-    const originalSelect = db.select;
-    db.select = mockSelect as never;
+    await expect(getActiveAnnouncementById(2)).resolves.toEqual(
+      announcements[0],
+    );
 
-    await expect(getActiveAnnouncementById(2)).resolves.toEqual(announcements[0]);
-    expect(mockLimit).toHaveBeenCalledWith(1);
-
-    db.select = originalSelect;
+    const query = whereQuery(where);
+    expect(query.sql).toContain('"announcements"."id" =');
+    expect(query.sql).toContain('"announcements"."hackathon_id" =');
+    expect(query.sql).toContain('"announcements"."expires_at" is null');
+    expect(query.sql).toContain('"announcements"."expires_at" >');
+    expect(query.params[0]).toBe(2);
+    expect(query.params[1]).toBe(activeHackathon.id);
+    expect(Date.parse(String(query.params[2]))).not.toBeNaN();
+    expect(limit).toHaveBeenCalledWith(1);
   });
 
   it("returns null when an announcement is not found", async () => {
     mockGetActiveHackathon.mockResolvedValue(activeHackathon);
-
-    const mockLimit = vi.fn().mockResolvedValue([]);
-    const mockWhere = vi.fn().mockReturnValue({ limit: mockLimit });
-    const mockFrom = vi.fn().mockReturnValue({ where: mockWhere });
-    const mockSelect = vi.fn().mockReturnValue({ from: mockFrom });
-    const originalSelect = db.select;
-    db.select = mockSelect as never;
+    mockQuery([]);
 
     await expect(getActiveAnnouncementById(999)).resolves.toBeNull();
-
-    db.select = originalSelect;
   });
 });
