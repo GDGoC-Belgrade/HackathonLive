@@ -40,7 +40,7 @@ const NavMenu = () => {
     const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 z-50 w-full max-w-md -translate-x-1/2 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)]">
+    <nav aria-label="Main navigation" className="fixed bottom-0 left-1/2 z-50 w-full max-w-md -translate-x-1/2 border-t border-gray-200 bg-white pb-[env(safe-area-inset-bottom)]">
         <div className="flex h-(--nav-height) items-stretch justify-around px-2">
             {ITEMS.map((item)=>{
                 const Icon=item.icon;
@@ -53,7 +53,8 @@ const NavMenu = () => {
                     <Link
                         key={item.href}
                         href={item.href}
-                        className="group flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5"
+                        aria-current={isActive ? 'page' : undefined}
+                        className="group flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
                     >
                         <div
                             className={`flex items-center justify-center w-12 h-7 rounded-full transition-colors ${
@@ -63,6 +64,7 @@ const NavMenu = () => {
                                 }`}
                         >
                             <Icon
+                                aria-hidden="true"
                                 className={`w-6 h-6 transition-colors ${
                                         isActive? 
                                             item.text:
