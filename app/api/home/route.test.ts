@@ -195,4 +195,65 @@ describe("GET /api/home", () => {
       },
     });
   });
+
+  it("returns 200 when there is no upcoming event", async () => {
+    mockGetActiveHackathon.mockResolvedValue(mockHackathon);
+    mockGetNextUpcomingEvent.mockResolvedValue(null as never);
+    mockGetLunchBreaks.mockResolvedValue([mockLunchBreak]);
+    mockGetLatestActiveAnnouncements.mockResolvedValue([mockAnnouncement]);
+
+    const response = await GET();
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.upcomingEvent).toBeNull();
+    expect(data.lunchBreaks).toHaveLength(1);
+    expect(data.announcements).toHaveLength(1);
+  });
+
+  it("returns 200 when there are no lunch breaks", async () => {
+    mockGetActiveHackathon.mockResolvedValue(mockHackathon);
+    mockGetNextUpcomingEvent.mockResolvedValue(mockEvent);
+    mockGetLunchBreaks.mockResolvedValue([]);
+    mockGetLatestActiveAnnouncements.mockResolvedValue([mockAnnouncement]);
+
+    const response = await GET();
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.upcomingEvent).not.toBeNull();
+    expect(data.lunchBreaks).toEqual([]);
+    expect(data.announcements).toHaveLength(1);
+  });
+
+  it("returns 200 when there are no announcements", async () => {
+    mockGetActiveHackathon.mockResolvedValue(mockHackathon);
+    mockGetNextUpcomingEvent.mockResolvedValue(mockEvent);
+    mockGetLunchBreaks.mockResolvedValue([mockLunchBreak]);
+    mockGetLatestActiveAnnouncements.mockResolvedValue([]);
+
+    const response = await GET();
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.upcomingEvent).not.toBeNull();
+    expect(data.lunchBreaks).toHaveLength(1);
+    expect(data.announcements).toEqual([]);
+  });
+
+  it("normalizes missing optional home data", async () => {
+    mockGetActiveHackathon.mockResolvedValue(mockHackathon);
+    mockGetNextUpcomingEvent.mockResolvedValue(null as never);
+    mockGetLunchBreaks.mockResolvedValue(null);
+    mockGetLatestActiveAnnouncements.mockResolvedValue(null);
+
+    const response = await GET();
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.upcomingEvent).toBeNull();
+    expect(data.lunchBreaks).toEqual([]);
+    expect(data.announcements).toEqual([]);
+  });
+
 });
