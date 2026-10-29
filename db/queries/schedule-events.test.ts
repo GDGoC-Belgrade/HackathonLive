@@ -305,6 +305,8 @@ describe("getNextUpcomingEvent", () => {
 
     await getNextUpcomingEvent(7);
 
+    expect(whereSql(where)).toBe('("schedule_events"."hackathon_id" = $1 and "schedule_events"."start_time" > $2)');
+
     const [hackathonId, now] = whereParams(where);
     expect(hackathonId).toBe(7);
     expect(new Date(now as string).getTime()).toBeLessThanOrEqual(Date.now());
