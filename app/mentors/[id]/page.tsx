@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
-import { Mail, Phone } from 'lucide-react';
+import { Briefcase, ExternalLink, Mail, Phone } from 'lucide-react';
 import { getMentor } from '@/lib/services/mentors';
 import { MentorAvatar } from '@/app/components/MentorAvatar';
 import { MentorBackLink } from '@/app/components/MentorBackLink';
+import { isValidLinkedinUrl } from '@/lib/linkedin-url';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,17 +12,18 @@ const MAX_POSTGRES_INT = 2147483647;
 export default async function MentorDetailsPage({ params }: PageProps<'/mentors/[id]'>) {
   const { id } = await params;
 
-  // Same rules as the API, so obviously invalid ids skip the request
   if (!/^[1-9]\d*$/.test(id) || Number(id) > MAX_POSTGRES_INT) {
     notFound();
   }
 
-  // Loading and failed requests are handled by loading.tsx and error.tsx
   const mentor = await getMentor(id);
 
   if (!mentor) {
     notFound();
   }
+
+  const linkedinUrl = mentor.linkedinUrl ?? '';
+  const hasLinkedin = isValidLinkedinUrl(linkedinUrl);
 
   return (
     <div className="mx-auto max-w-md text-gray-900">
@@ -56,12 +58,25 @@ export default async function MentorDetailsPage({ params }: PageProps<'/mentors/
           </a>
           {mentor.phoneNumber && (
             <a
-              // Keep only what the dialer understands, e.g. "+381 64 123-4567" -> "+381641234567"
+
               href={`tel:${mentor.phoneNumber.replace(/[^\d+]/g, '')}`}
               className="flex min-h-14 items-center gap-3 rounded-2xl bg-brand-green/10 p-4 transition active:scale-[0.98]"
             >
               <Phone className="h-5 w-5 shrink-0 text-brand-green" aria-hidden="true" />
               <span className="min-w-0 wrap-anywhere">{mentor.phoneNumber}</span>
+            </a>
+          )}
+          {hasLinkedin && (
+            <a
+              href={linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${mentor.name} on LinkedIn (opens in a new tab)`}
+              className="flex min-h-14 items-center gap-3 rounded-2xl bg-brand-yellow/10 p-4 transition active:scale-[0.98]"
+            >
+              <Briefcase className="h-5 w-5 shrink-0 text-brand-yellow" aria-hidden="true" />
+              <span className="min-w-0 flex-1">LinkedIn profile</span>
+              <ExternalLink className="h-4 w-4 shrink-0 text-gray-400" aria-hidden="true" />
             </a>
           )}
         </div>
