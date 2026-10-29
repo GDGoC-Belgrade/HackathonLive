@@ -127,4 +127,36 @@ describe("GET /api/schedule", () => {
       },
     });
   });
+
+  it("keeps the API contract for every event field", async () => {
+    mockGetScheduleEvents.mockResolvedValue([
+      {
+        id: 3,
+        hackathonId: 1,
+        title: "Night Hacking",
+        description: null,
+        startTime: new Date("2026-10-10T23:00:00Z"),
+        endTime: new Date("2026-10-11T01:00:00Z"),
+        location: "Main Hall",
+        type: "other" as const,
+      },
+    ]);
+
+    const response = await GET();
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data).toEqual([
+      {
+        id: 3,
+        hackathonId: 1,
+        title: "Night Hacking",
+        description: null,
+        startTime: "2026-10-10T23:00:00.000Z",
+        endTime: "2026-10-11T01:00:00.000Z",
+        location: "Main Hall",
+        type: "other",
+      },
+    ]);
+  });
 });
