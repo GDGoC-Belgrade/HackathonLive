@@ -41,6 +41,7 @@ const mockMentor = {
   company: null,
   bio: null,
   imageUrl: null,
+  linkedinUrl: "https://www.linkedin.com/in/ana-anic",
   phoneNumber: null,
   email: "ana@example.com",
 };
@@ -159,5 +160,15 @@ describe("getActiveHackathonMentorById", () => {
     const result = await getActiveHackathonMentorById(1);
 
     expect(result).toEqual({ mentor: mockMentor });
+  });
+
+  it("returns mentor without LinkedIn with linkedinUrl as null", async () => {
+    const mentorWithoutLinkedin = { ...mockMentor, linkedinUrl: null };
+    mockGetActiveHackathon.mockResolvedValue(activeHackathon);
+    mockQueryChain([mentorWithoutLinkedin]);
+
+    const result = await getActiveHackathonMentorById(1);
+
+    expect(result).toEqual({ mentor: mentorWithoutLinkedin });
   });
 });
