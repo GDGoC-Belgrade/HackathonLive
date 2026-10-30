@@ -1,16 +1,18 @@
 import "dotenv/config";
 
-import { db } from "../index";
-
-import {eq} from "drizzle-orm";
-
-
+import { eq } from "drizzle-orm";
 
 import { isValidGoogleFormUrl } from "../../lib/google-form-url";
-
-import { hackathons, lunchBreaks, quests, announcements, scheduleEvents, mentors } from "../schema";
+import { db } from "../index";
+import {
+  announcements,
+  hackathons,
+  lunchBreaks,
+  mentors,
+  quests,
+  scheduleEvents,
+} from "../schema";
 import { datasets, type SeedDatasetName } from "./datasets";
-//import { eq } from "drizzle-orm/sql/expressions/conditions";
 
 const datasetName = process.argv[2] as SeedDatasetName | undefined;
 
@@ -51,6 +53,9 @@ async function seed() {
     existing ??
     (await db.insert(hackathons).values(dataset.hackathon).returning())[0];
 
+  if (!hackathon) {
+    throw new Error("Hackathon insert did not return a record.");
+  }
 
   await db.delete(mentors).where(eq(mentors.hackathonId, hackathon.id));
 
@@ -58,19 +63,8 @@ async function seed() {
     dataset.mentors.map((mentor) => ({
       ...mentor,
       hackathonId: hackathon.id,
-    })),);
-
-  if (!hackathon) {
-    throw new Error("Hackathon insert did not return a record.");
-  }
-
-    await db.delete(mentors).where(eq(mentors.hackathonId, hackathon.id));
-
-  await db.insert(mentors).values(
-    dataset.mentors.map((mentor) => ({
-      ...mentor,
-      hackathonId: hackathon.id,
-    })));
+    }))
+  );
 
   await db
     .delete(scheduleEvents)
@@ -114,7 +108,6 @@ async function seed() {
       ...quest,
       hackathonId: hackathon.id,
     }))
-
   );
 
   console.log(`Seed "${datasetName}" completed successfully`);
