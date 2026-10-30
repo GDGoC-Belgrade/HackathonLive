@@ -113,4 +113,26 @@ describe("getQuestsByHackathonId", () => {
       new PgDialect().sqlToQuery(orderBy.mock.calls[0][0] as SQL).sql,
     ).toContain('"quests"."id" asc');
   });
+
+  it("returns a single quest with its googleFormUrl", async () => {
+    mockQuery([validRow]);
+
+    const result = await getQuestsByHackathonId(12);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].googleFormUrl).toBe(validRow.googleFormUrl);
+  });
+
+  it("returns only valid quests when some have missing or invalid URL", async () => {
+    mockQuery([
+      validRow,
+      { ...validRow, id: 2, googleFormUrl: "" },
+      { ...validRow, id: 3, googleFormUrl: "https://example.com/x" },
+      { ...validRow, id: 4, googleFormUrl: "https://forms.gle/abc" },
+    ]);
+
+    const result = await getQuestsByHackathonId(12);
+
+    expect(result.map((quest) => quest.id)).toEqual([1, 4]);
+  });
 });
