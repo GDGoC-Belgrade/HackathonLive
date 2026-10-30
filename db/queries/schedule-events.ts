@@ -61,7 +61,7 @@ export async function getNextUpcomingEvent(hackathonId: number) {
         gt(scheduleEvents.startTime, new Date()),
       ),
     )
-    .orderBy(asc(scheduleEvents.startTime))
+    .orderBy(asc(scheduleEvents.startTime), asc(scheduleEvents.id))
     .limit(1);
 
   return event ?? null;
