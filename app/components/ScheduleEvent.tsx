@@ -1,4 +1,4 @@
-import { formatTime } from '@/lib/time';
+import { formatDayTime, formatTime } from '@/lib/time';
 import { ScheduleEvent } from '@/lib/types/schedule';
 import { Megaphone, Utensils, Code, Trophy, MapPin, type LucideIcon } from 'lucide-react';
 
@@ -30,12 +30,13 @@ const iconMap: Record<EventType, LucideIcon> = {
 
 interface Props {
   event: ScheduleEvent;
+  showDay?: boolean;
 }
 
 
 
 
-export const ScheduleEventCard = ({ event }: Props) => {
+export const ScheduleEventCard = ({ event, showDay = false }: Props) => {
   const theme: EventType = event.type;
   const cardBg = cardColorMap[theme];
   const iconColor = iconColorMap[theme];
@@ -47,7 +48,7 @@ export const ScheduleEventCard = ({ event }: Props) => {
       <Icon className={`h-6 w-6 shrink-0 ${iconColor}`} aria-hidden="true" />
       <div className="min-w-0">
         <p className="whitespace-nowrap text-xs font-semibold text-gray-600">
-          {formatTime(event.startTime)}
+          {showDay ? formatDayTime(event.startTime) : formatTime(event.startTime)}
         </p>
         <h3 className="font-semibold break-words">{event.title}</h3>
         <p className="text-sm text-gray-600 break-words">({event.location})</p>

@@ -8,12 +8,12 @@ interface Props {
 }
 
 export const AnnouncementCard = ({ announcement }: Props) => {
-  const { icon: Icon, text, iconBox } = announcementStyles[announcement.type];
+  const { icon: Icon, text, iconBox, card, badge, label } = announcementStyles[announcement.type];
 
   return (
-    <article className="relative flex gap-3 rounded-2xl bg-gray-50 p-4 transition active:scale-[0.98]">
-      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${iconBox}`}>
-        <Icon className={`h-4 w-4 ${text}`} aria-hidden="true" />
+    <article className={`relative flex gap-3 rounded-2xl border-2 p-4 transition active:scale-[0.98] ${card}`}>
+      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${iconBox}`}>
+        <Icon className={`h-5 w-5 ${text}`} aria-hidden="true" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex justify-between gap-2">
@@ -28,6 +28,11 @@ export const AnnouncementCard = ({ announcement }: Props) => {
           <span className="shrink-0 text-xs text-gray-500">{timeAgo(announcement.createdAt)}</span>
         </div>
         <p className="mt-1 line-clamp-3 text-sm text-gray-900 break-words">{announcement.message}</p>
+        <span
+          className={`mt-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${badge}`}
+        >
+          {label}
+        </span>
       </div>
     </article>
   );
