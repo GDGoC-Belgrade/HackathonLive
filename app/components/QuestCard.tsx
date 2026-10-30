@@ -13,7 +13,8 @@ import type { Quest } from "@/lib/types/quests";
 
 const THEMES: { bg: string; text: string; border: string }[] = [
   { bg: "bg-brand-blue/10", text: "text-brand-blue", border: "border-brand-blue" },
-  { bg: "bg-brand-yellow/10", text: "text-brand-yellow", border: "border-brand-yellow" },
+  // Brand žuta je nečitljiva kao tekst na svetloj pozadini, pa tekst koristi tamniju nijansu
+  { bg: "bg-brand-yellow/15", text: "text-yellow-700", border: "border-brand-yellow" },
   { bg: "bg-brand-red/10", text: "text-brand-red", border: "border-brand-red" },
   { bg: "bg-brand-green/10", text: "text-brand-green", border: "border-brand-green" },
 ];
@@ -47,11 +48,12 @@ export function QuestCard({ quest, index }: QuestCardProps) {
         <Icon className="h-5 w-5" aria-hidden="true" />
       </span>
       <div className="min-w-0 flex-1">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="min-w-0 font-semibold text-gray-900 break-words">{quest.title}</h3>
+        {/* Kada naslov i kategorija ne staju u isti red, kategorija prelazi ispod naslova */}
+        <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
+          <h2 className="min-w-0 font-semibold text-gray-900 break-words">{quest.title}</h2>
           {/* Kategorija stoji na mestu XP oznake iz dizajna */}
           <span
-            className={`max-w-[45%] shrink-0 truncate rounded-md px-2 py-0.5 text-xs font-semibold capitalize ${theme.bg} ${theme.text}`}
+            className={`max-w-full truncate rounded-md px-2 py-0.5 text-xs font-semibold capitalize ${theme.bg} ${theme.text}`}
             title={quest.category}
           >
             {quest.category}
@@ -66,6 +68,7 @@ export function QuestCard({ quest, index }: QuestCardProps) {
           <span className={`${BUTTON_CLASS} ${theme.bg} ${theme.text}`}>
             <Icon className="h-4 w-4" aria-hidden="true" />
             Open Quest
+            <span className="sr-only">(opens in a new tab)</span>
           </span>
         ) : (
           <span className={`${BUTTON_CLASS} border border-gray-200 bg-white text-gray-500`}>
@@ -86,8 +89,7 @@ export function QuestCard({ quest, index }: QuestCardProps) {
       href={quest.googleFormUrl}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Open quest: ${quest.title} (opens in a new tab)`}
-      className={`${CARD_CLASS} transition-colors active:bg-gray-50 ${theme.border}`}
+      className={`${CARD_CLASS} transition-colors hover:bg-gray-50 active:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue ${theme.border}`}
     >
       {content}
     </a>

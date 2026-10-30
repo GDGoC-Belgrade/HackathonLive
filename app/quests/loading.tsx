@@ -1,11 +1,11 @@
 // Kostur koji prati izgled Quest kartica dok se podaci učitavaju
 export default function QuestsLoading() {
   return (
-    <div className="flex flex-col gap-6 pt-2" aria-busy="true">
+    <div className="text-gray-900" aria-busy="true">
       <span className="sr-only" role="status">
         Loading quests…
       </span>
-      <h1 className="text-xl font-bold text-gray-900">Event Quests</h1>
+      <h1 className="mb-4 text-2xl font-bold">Event Quests</h1>
       <div className="flex flex-col gap-4" aria-hidden="true">
         {Array.from({ length: 4 }, (_, index) => (
           <div

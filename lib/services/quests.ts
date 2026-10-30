@@ -10,5 +10,11 @@ export async function getQuests(): Promise<Quest[]> {
   if (!res.ok) {
     throw new Error(`GET /api/quests bad result: ${res.status}`);
   }
-  return res.json();
+
+  const quests: unknown = await res.json();
+  // Neočekivan odgovor ide u error.tsx umesto da sruši render liste
+  if (!Array.isArray(quests)) {
+    throw new Error("GET /api/quests returned an unexpected response");
+  }
+  return quests;
 }
