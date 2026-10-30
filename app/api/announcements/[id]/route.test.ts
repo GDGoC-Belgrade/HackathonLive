@@ -145,4 +145,20 @@ describe("GET /api/announcements/[id]", () => {
       },
     });
   });
+
+  it("returns 404 when there is no active hackathon", async () => {
+    mockGetActiveHackathon.mockResolvedValue(null as never);
+
+    const response = await getAnnouncementById("1");
+    const data = await response.json();
+
+    expect(response.status).toBe(404);
+    expect(data).toEqual({
+      error: {
+        code: "NO_ACTIVE_HACKATHON",
+        message: "No active hackathon found",
+      },
+    });
+    expect(mockGetActiveAnnouncementById).not.toHaveBeenCalled();
+  });
 });
