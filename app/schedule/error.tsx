@@ -6,10 +6,10 @@ import { StateMessage } from '@/app/components/StateMessage';
 
 export default function ScheduleError({
   error,
-  reset,
+  retry,
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }) {
   useEffect(() => {
     console.error(error);
@@ -26,7 +26,7 @@ export default function ScheduleError({
         action={
           <button
             type="button"
-            onClick={() => reset()}
+            onClick={() => retry()}
             className="rounded-full bg-brand-blue px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-blue/90 active:scale-[0.98]"
           >
             Try again
