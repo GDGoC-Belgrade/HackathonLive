@@ -29,8 +29,8 @@ export async function GET() {
       countdown: {
         targetTime: hackathon.endDate,
       },
-      upcomingEvent,
-      lunchBreaks,
+      upcomingEvent: upcomingEvent ?? null,
+      lunchBreaks: lunchBreaks ?? [],
       announcements: announcements ?? [],
     });
   } catch (error) {

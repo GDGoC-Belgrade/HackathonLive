@@ -10,8 +10,8 @@ export default async function QuestsPage() {
   const quests = await getQuests();
 
   return (
-    <div className="flex flex-col gap-6 pt-2">
-      <h1 className="text-xl font-bold text-gray-900">Event Quests</h1>
+    <div className="text-gray-900">
+      <h1 className="mb-4 text-2xl font-bold">Event Quests</h1>
 
       {quests.length === 0 ? (
         <StateMessage
