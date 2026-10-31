@@ -51,4 +51,20 @@ describe("GET /api/hackathons/active", () => {
       },
     });
   });
+
+  it("returns 500 when fetching the active hackathon fails", async () => {
+    mockGetActiveHackathon.mockRejectedValue(
+      new Error("DB connection failed"),
+    );
+
+    const response = await GET();
+
+    expect(response.status).toBe(500);
+    await expect(response.json()).resolves.toEqual({
+      error: {
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Internal server error",
+      },
+    });
+  });
 });

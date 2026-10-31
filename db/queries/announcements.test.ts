@@ -128,6 +128,13 @@ describe("announcement queries", () => {
     expect(limit).toHaveBeenCalledWith(3);
   });
 
+  it("returns an empty array when there are no latest active announcements", async () => {
+    mockGetActiveHackathon.mockResolvedValue(activeHackathon);
+    mockQuery([], true);
+
+    await expect(getLatestActiveAnnouncements()).resolves.toEqual([]);
+  });
+
   it("filters announcement details by id, active hackathon, and expiration", async () => {
     mockGetActiveHackathon.mockResolvedValue(activeHackathon);
     const { where, limit } = mockQuery([announcements[0]]);

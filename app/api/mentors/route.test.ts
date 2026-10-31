@@ -19,6 +19,7 @@ const mockMentors = [
     company: "Acme",
     bio: "Node.js and Postgres",
     imageUrl: null,
+    linkedinUrl: "https://www.linkedin.com/in/ana-anic",
     phoneNumber: null,
     email: "ana@example.com",
   },
@@ -30,6 +31,7 @@ const mockMentors = [
     company: null,
     bio: null,
     imageUrl: "https://example.com/marko.png",
+    linkedinUrl: null,
     phoneNumber: "+381601234567",
     email: "marko@example.com",
   },
@@ -49,6 +51,17 @@ describe("GET /api/mentors", () => {
 
     expect(response.status).toBe(200);
     expect(data).toEqual(mockMentors);
+  });
+
+  it("returns linkedinUrl for each mentor, null when missing", async () => {
+    mockGetMentors.mockResolvedValue(mockMentors);
+
+    const response = await GET();
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data[0].linkedinUrl).toBe("https://www.linkedin.com/in/ana-anic");
+    expect(data[1]).toHaveProperty("linkedinUrl", null);
   });
 
   it("returns empty array when active hackathon has no mentors", async () => {
