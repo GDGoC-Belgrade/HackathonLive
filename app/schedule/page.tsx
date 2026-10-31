@@ -1,4 +1,6 @@
+import { Inbox } from 'lucide-react';
 import { ScheduleEventCard } from '@/app/components/ScheduleEvent';
+import { StateMessage } from '@/app/components/StateMessage';
 import { getScheduleEvents } from '@/lib/services/schedule';
 import { groupEventsByDay } from '@/lib/schedule-groups';
 
@@ -16,9 +18,11 @@ export default async function SchedulePage() {
       <h1 className="mb-6 text-2xl font-bold">Upcoming Events</h1>
 
       {groups.length === 0 ? (
-        <p className="rounded-2xl bg-gray-50 p-4 text-sm text-gray-600">
-          Nema događaja u rasporedu.
-        </p>
+        <StateMessage
+          icon={Inbox}
+          title="No events yet"
+          description="The schedule will show up here once events are added."
+        />
       ) : (
         <div className="flex flex-col gap-6">
           {groups.map((group) => (

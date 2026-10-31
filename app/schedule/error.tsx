@@ -1,19 +1,38 @@
-'use client';
+'use client'; // error.tsx mora biti klijent komponenta
 
-export default function ScheduleError({ reset }: { error: Error; reset: () => void }) {
+import { useEffect } from 'react';
+import { CloudOff } from 'lucide-react';
+import { StateMessage } from '@/app/components/StateMessage';
+
+export default function ScheduleError({
+  error,
+  retry,
+}: {
+  error: Error & { digest?: string };
+  retry: () => void;
+}) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
   return (
-    <div className="mx-auto max-w-md p-5 text-gray-900">
-      <h1 className="mb-6 text-2xl font-bold">Upcoming Events</h1>
-      <div role="alert" className="rounded-2xl bg-brand-red/10 p-4">
-        <p className="text-sm text-gray-900">Raspored trenutno nije dostupan.</p>
-        <button
-          type="button"
-          onClick={reset}
-          className="mt-3 text-sm font-medium text-brand-blue"
-        >
-          Pokušaj ponovo
-        </button>
-      </div>
+    <div className="flex flex-col gap-6 pt-2">
+      <h1 className="text-xl font-bold text-gray-900">Upcoming Events</h1>
+      <StateMessage
+        tone="error"
+        icon={CloudOff}
+        title="Couldn’t load the schedule"
+        description="Something went wrong on our side. Check your connection and try again."
+        action={
+          <button
+            type="button"
+            onClick={() => retry()}
+            className="rounded-full bg-brand-blue px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-blue/90 active:scale-[0.98]"
+          >
+            Try again
+          </button>
+        }
+      />
     </div>
   );
 }
