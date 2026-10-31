@@ -1,22 +1,20 @@
 import type { ScheduleEvent } from '@/lib/types/schedule';
 
-const DAY_NAMES = ['NEDELJA', 'PONEDELJAK', 'UTORAK', 'SREDA', 'ČETVRTAK', 'PETAK', 'SUBOTA'];
+const DAY_NAMES = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 
 export interface ScheduleDayGroup {
   dateKey: string; //  datum
-  dayName: string; 
+  dayName: string;
+  dateLabel: string; 
   events: ScheduleEvent[];
 }
 
-// Datum u zoni Europe/Belgrade
-function getBelgradeDateKey(date: Date): string {
-  return new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Europe/Belgrade',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(date);
-}
+const dateKeyFormatter = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/Belgrade',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
 
 function getDayName(dateKey: string): string {
   const [year, month, day] = dateKey.split('-').map(Number);
@@ -25,20 +23,24 @@ function getDayName(dateKey: string): string {
 }
 
 export function groupEventsByDay(events: ScheduleEvent[]): ScheduleDayGroup[] {
-  const sorted = [...events].sort(
-    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
+  const sorted = events
+  .map((event) => ({event, time: new Date(event.startTime).getTime()}))
+  .filter(({time}) => Number.isFinite(time))
+  .sort(
+    (a, b) => a.time - b.time || a.event.title.localeCompare(b.event.title,'sr')
   );
 
   const groups: ScheduleDayGroup[] = [];
 
-  for (const event of sorted) {
-    const dateKey = getBelgradeDateKey(new Date(event.startTime));
+  for (const {event, time} of sorted) {
+    const dateKey = dateKeyFormatter.format(new Date(time));
     const last = groups[groups.length - 1];
 
     if (last && last.dateKey === dateKey) {
       last.events.push(event);
     } else {
-      groups.push({ dateKey, dayName: getDayName(dateKey), events: [event] });
+      const [, month, day] = dateKey.split('-');
+      groups.push({ dateKey, dayName: getDayName(dateKey), dateLabel: `${day}.${month}.`, events: [event] });
     }
   }
 
