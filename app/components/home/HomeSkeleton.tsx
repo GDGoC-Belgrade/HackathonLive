@@ -55,7 +55,7 @@ export const HomeSkeleton = () => (
       <Bar className="h-7 w-2/5" />
       {[0, 1].map((i) => (
         <div key={i} className="flex gap-3 rounded-2xl bg-gray-100 p-4">
-          <div className="h-9 w-9 shrink-0 rounded-full bg-gray-200" />
+          <div className="h-10 w-10 shrink-0 rounded-xl bg-gray-200" />
           <div className="flex flex-1 flex-col gap-2">
             <Bar className="h-3 w-1/3" />
             <Bar className="h-4 w-full" />

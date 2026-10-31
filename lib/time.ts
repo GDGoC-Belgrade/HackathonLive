@@ -29,3 +29,13 @@ export function formatTime(time: string): string{
       timeZone: 'Europe/Belgrade'
     })
   };
+
+export function formatDayTime(time: string): string {
+  const day = new Date(time).toLocaleDateString('en-GB', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    timeZone: 'Europe/Belgrade',
+  });
+  return `${day} · ${formatTime(time)}`;
+}

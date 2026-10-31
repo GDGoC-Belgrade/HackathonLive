@@ -29,7 +29,7 @@ async function HomeContent() {
   return (
     <>
       <HackathonHeader hackathon={home.hackathon} />
-      <CountdownCard endDate={home.hackathon.endDate} />
+      <CountdownCard startDate={home.hackathon.startDate} endDate={home.hackathon.endDate} />
       <LunchBreakCard lunchBreak={home.lunchBreak} />
       <UpcomingEventsSection events={home.upcomingEvent ? [home.upcomingEvent] : []} />
       <AnnouncementsSection announcements={home.announcements} />
