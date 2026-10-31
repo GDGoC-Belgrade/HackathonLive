@@ -1,6 +1,6 @@
 import type { ScheduleEvent } from '@/lib/types/schedule';
 
-const DAY_NAMES = ['NEDELJA', 'PONEDELJAK', 'UTORAK', 'SREDA', 'ČETVRTAK', 'PETAK', 'SUBOTA'];
+const DAY_NAMES = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 
 export interface ScheduleDayGroup {
   dateKey: string; //  datum
