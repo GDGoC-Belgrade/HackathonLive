@@ -8,4 +8,6 @@ export interface Mentor {
   imageUrl: string | null;
   phoneNumber: string | null;
   email: string;
+  // Opciono: API ga vraća tek posle BE4 S4
+  linkedinUrl?: string | null;
 }

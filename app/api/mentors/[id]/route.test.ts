@@ -18,8 +18,16 @@ const mockMentor = {
   company: "Acme",
   bio: "Node.js and Postgres",
   imageUrl: null,
+  linkedinUrl: "https://www.linkedin.com/in/ana-anic",
   phoneNumber: null,
   email: "ana@example.com",
+};
+
+const mockMentorWithoutLinkedin = {
+  ...mockMentor,
+  id: 2,
+  name: "Marko Marković",
+  linkedinUrl: null,
 };
 
 function callGet(id: string) {
@@ -43,6 +51,27 @@ describe("GET /api/mentors/[id]", () => {
     expect(response.status).toBe(200);
     expect(data).toEqual(mockMentor);
     expect(mockGetMentorById).toHaveBeenCalledWith(1);
+  });
+
+  it("returns linkedinUrl when mentor has one", async () => {
+    mockGetMentorById.mockResolvedValue({ mentor: mockMentor });
+
+    const response = await callGet("1");
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.linkedinUrl).toBe("https://www.linkedin.com/in/ana-anic");
+  });
+
+  it("returns linkedinUrl as null when mentor has none", async () => {
+    mockGetMentorById.mockResolvedValue({ mentor: mockMentorWithoutLinkedin });
+
+    const response = await callGet("2");
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data).toEqual(mockMentorWithoutLinkedin);
+    expect(data).toHaveProperty("linkedinUrl", null);
   });
 
   it("accepts the largest Postgres integer", async () => {

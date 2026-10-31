@@ -9,8 +9,8 @@ export const announcementStyles: Record<
   info: {
     label: "Info",
     icon: CalendarDays,
-    card: "border-brand-blue bg-brand-blue/5",
-    iconBox: "bg-brand-blue/15",
+    card: "border-brand-blue bg-brand-blue/10",
+    iconBox: "bg-brand-blue/20",
     text: "text-brand-blue",
     badge: "bg-brand-blue/15 text-brand-blue",
   },
@@ -25,8 +25,8 @@ export const announcementStyles: Record<
   important: {
     label: "Important",
     icon: Megaphone,
-    card: "border-brand-red bg-brand-red/5",
-    iconBox: "bg-brand-red/15",
+    card: "border-brand-red bg-brand-red/10",
+    iconBox: "bg-brand-red/20",
     text: "text-brand-red",
     badge: "bg-brand-red/15 text-brand-red",
   },

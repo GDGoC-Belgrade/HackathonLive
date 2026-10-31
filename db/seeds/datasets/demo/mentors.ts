@@ -6,6 +6,7 @@ export const demoMentors = [
     bio: "Works with React and Next.js, happy to help with UI and components.",
     phoneNumber: "+381641234567",
     email: "marko.petrovic@example.com",
+    linkedinUrl: "https://www.linkedin.com/in/marko-petrovic-example",
   },
   {
     name: "Jelena Jovanović",
@@ -14,6 +15,7 @@ export const demoMentors = [
     bio: "Helps with APIs, databases and connecting frontend to backend.",
     phoneNumber: "+381652345678",
     email: "jelena.jovanovic@example.com",
+    linkedinUrl: "https://www.linkedin.com/in/jelena-jovanovic-example",
   },
   {
     name: "Nikola Ilić",
@@ -22,7 +24,9 @@ export const demoMentors = [
     bio: "Helps teams make their app clear, simple and easy to use.",
     phoneNumber: "+381633456789",
     email: "nikola.ilic@example.com",
+    linkedinUrl: "https://linkedin.com/in/nikola-ilic-example",
   },
+  // No linkedinUrl on purpose, to cover a mentor without a LinkedIn profile
   {
     name: "Milica Nikolić",
     role: "Project Manager",

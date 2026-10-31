@@ -27,7 +27,7 @@ export const UpcomingEventsSection = ({ events }: Props) => (
       <div className="-mx-4 flex snap-x snap-mandatory scroll-pl-4 gap-3 overflow-x-auto px-4 pb-2 [scrollbar-width:none]">
         {events.map((event) => (
           <div key={event.id} className="flex w-4/5 shrink-0 snap-start [&>*]:min-w-0 [&>*]:flex-1">
-            <ScheduleEventCard event={event} />
+            <ScheduleEventCard event={event} showDay />
           </div>
         ))}
 

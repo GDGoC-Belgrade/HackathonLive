@@ -45,7 +45,7 @@ const NavMenu = () => {
             {ITEMS.map((item)=>{
                 const Icon=item.icon;
                 const isActive = item.href === '/'
-                    ? pathname === '/'
+                    ? pathname === '/' || pathname === '/announcements' || pathname.startsWith('/announcements/')
                     : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
 
