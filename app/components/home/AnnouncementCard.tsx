@@ -1,31 +1,38 @@
-import { CalendarDays, Megaphone, Wifi, type LucideIcon } from 'lucide-react';
-import { Announcement, AnnouncementType } from '@/data/mockHome';
+import Link from 'next/link';
+import { Announcement } from '@/lib/types/announcements';
+import { announcementStyles } from '@/app/components/announcementStyles';
 import { timeAgo } from '@/lib/time';
-
-const themeMap: Record<AnnouncementType, { icon: LucideIcon; text: string; bg: string }> = {
-  important: { icon: Megaphone, text: 'text-brand-red', bg: 'bg-brand-red/10' },
-  warning: { icon: Wifi, text: 'text-brand-green', bg: 'bg-brand-green/10' },
-  info: { icon: CalendarDays, text: 'text-brand-blue', bg: 'bg-brand-blue/10' },
-};
 
 interface Props {
   announcement: Announcement;
 }
 
 export const AnnouncementCard = ({ announcement }: Props) => {
-  const { icon: Icon, text, bg } = themeMap[announcement.type];
+  const { icon: Icon, text, iconBox, card, badge, label } = announcementStyles[announcement.type];
 
   return (
-    <article className="flex gap-3 rounded-2xl bg-gray-50 p-4">
-      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${bg}`}>
-        <Icon className={`h-4 w-4 ${text}`} aria-hidden="true" />
+    <article className={`relative flex gap-3 rounded-2xl border-2 p-4 transition active:scale-[0.98] ${card}`}>
+      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${iconBox}`}>
+        <Icon className={`h-5 w-5 ${text}`} aria-hidden="true" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex justify-between gap-2">
-          <h3 className={`truncate text-xs font-semibold uppercase ${text}`}>{announcement.title}</h3>
+          <h3 className={`min-w-0 text-xs font-semibold uppercase ${text}`}>
+            <Link
+              href={`/announcements/${announcement.id}`}
+              className="line-clamp-2 break-words after:absolute after:inset-0 after:rounded-2xl"
+            >
+              {announcement.title}
+            </Link>
+          </h3>
           <span className="shrink-0 text-xs text-gray-500">{timeAgo(announcement.createdAt)}</span>
         </div>
-        <p className="mt-1 text-sm text-gray-900 break-words">{announcement.message}</p>
+        <p className="mt-1 line-clamp-3 text-sm text-gray-900 break-words">{announcement.message}</p>
+        <span
+          className={`mt-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${badge}`}
+        >
+          {label}
+        </span>
       </div>
     </article>
   );

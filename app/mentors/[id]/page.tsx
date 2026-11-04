@@ -1,57 +1,48 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Mail, Phone } from 'lucide-react';
-import { getMockMentorById, mockMentors } from '@/data/mockMentors';
+import { Briefcase, ExternalLink, Mail, Phone } from 'lucide-react';
+import { getMentor } from '@/lib/services/mentors';
 import { MentorAvatar } from '@/app/components/MentorAvatar';
+import { MentorBackLink } from '@/app/components/MentorBackLink';
+import { isValidLinkedinUrl } from '@/lib/linkedin-url';
 
-export function generateStaticParams() {
-  return mockMentors.map((mentor) => ({ id: String(mentor.id) }));
-}
+export const dynamic = 'force-dynamic';
+
+const MAX_POSTGRES_INT = 2147483647;
 
 export default async function MentorDetailsPage({ params }: PageProps<'/mentors/[id]'>) {
   const { id } = await params;
-  const mentor = getMockMentorById(Number(id));
+
+  if (!/^[1-9]\d*$/.test(id) || Number(id) > MAX_POSTGRES_INT) {
+    notFound();
+  }
+
+  const mentor = await getMentor(id);
 
   if (!mentor) {
     notFound();
   }
 
+  const linkedinUrl = mentor.linkedinUrl ?? '';
+  const hasLinkedin = isValidLinkedinUrl(linkedinUrl);
+
   return (
     <div className="mx-auto max-w-md text-gray-900">
-      {/* Always goes to the list, so it also works when the page is opened from a shared link */}
-      <Link
-        href="/mentors"
-        className="-ml-2 mb-4 inline-flex items-center gap-1 rounded-full px-2 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100"
-      >
-        <ArrowLeft className="h-5 w-5" aria-hidden="true" />
-        All mentors
-      </Link>
+      <MentorBackLink />
 
       <div className="flex flex-col items-center text-center">
         <MentorAvatar name={mentor.name} imageUrl={mentor.imageUrl} size={112} className="mb-4" />
-        <h1 className="text-2xl font-bold">{mentor.name}</h1>
-        <p className="mt-1 text-gray-600">{mentor.role}</p>
+        <h1 className="w-full break-words text-2xl font-bold">{mentor.name}</h1>
+        <p className="mt-1 w-full break-words text-gray-600">{mentor.role}</p>
         {mentor.company && (
-          <p className="mt-1 font-medium text-brand-green">{mentor.company}</p>
-        )}
-        {mentor.topics && mentor.topics.length > 0 && (
-          <ul className="mt-3 flex flex-wrap justify-center gap-2">
-            {mentor.topics.map((topic) => (
-              <li
-                key={topic}
-                className="rounded-full bg-brand-yellow/15 px-3 py-1 text-xs font-medium text-gray-700"
-              >
-                {topic}
-              </li>
-            ))}
-          </ul>
+          <p className="mt-1 w-full break-words font-medium text-brand-green">{mentor.company}</p>
         )}
       </div>
 
       {mentor.bio && (
         <section className="mt-6">
           <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-500">About</h2>
-          <p className="leading-relaxed text-gray-700">{mentor.bio}</p>
+          {/* Keeps line breaks from the bio and wraps long words or links */}
+          <p className="whitespace-pre-line wrap-anywhere leading-relaxed text-gray-700">{mentor.bio}</p>
         </section>
       )}
 
@@ -60,18 +51,32 @@ export default async function MentorDetailsPage({ params }: PageProps<'/mentors/
         <div className="flex flex-col gap-3">
           <a
             href={`mailto:${mentor.email}`}
-            className="flex items-center gap-3 rounded-2xl bg-brand-blue/10 p-4 transition active:scale-[0.98]"
+            className="flex min-h-14 items-center gap-3 rounded-2xl bg-brand-blue/10 p-4 transition active:scale-[0.98]"
           >
             <Mail className="h-5 w-5 shrink-0 text-brand-blue" aria-hidden="true" />
-            <span className="min-w-0 break-all">{mentor.email}</span>
+            <span className="min-w-0 wrap-anywhere">{mentor.email}</span>
           </a>
           {mentor.phoneNumber && (
             <a
-              href={`tel:${mentor.phoneNumber.replace(/\s/g, '')}`}
-              className="flex items-center gap-3 rounded-2xl bg-brand-green/10 p-4 transition active:scale-[0.98]"
+
+              href={`tel:${mentor.phoneNumber.replace(/[^\d+]/g, '')}`}
+              className="flex min-h-14 items-center gap-3 rounded-2xl bg-brand-green/10 p-4 transition active:scale-[0.98]"
             >
               <Phone className="h-5 w-5 shrink-0 text-brand-green" aria-hidden="true" />
-              <span>{mentor.phoneNumber}</span>
+              <span className="min-w-0 wrap-anywhere">{mentor.phoneNumber}</span>
+            </a>
+          )}
+          {hasLinkedin && (
+            <a
+              href={linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${mentor.name} on LinkedIn (opens in a new tab)`}
+              className="flex min-h-14 items-center gap-3 rounded-2xl bg-brand-yellow/10 p-4 transition active:scale-[0.98]"
+            >
+              <Briefcase className="h-5 w-5 shrink-0 text-brand-yellow" aria-hidden="true" />
+              <span className="min-w-0 flex-1">LinkedIn profile</span>
+              <ExternalLink className="h-4 w-4 shrink-0 text-gray-400" aria-hidden="true" />
             </a>
           )}
         </div>

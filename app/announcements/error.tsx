@@ -1,0 +1,18 @@
+'use client';
+
+import { useEffect } from 'react';
+import { ErrorState } from '@/app/components/states/ErrorState';
+
+export default function AnnouncementsError({
+  error,
+  retry,
+}: {
+  error: Error & { digest?: string };
+  retry: () => void;
+}) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
+  return <ErrorState onRetry={retry} />;
+}

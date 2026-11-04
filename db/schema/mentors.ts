@@ -19,7 +19,11 @@ export const mentors = pgTable("mentors", {
 
   imageUrl: text("image_url"),
 
+  linkedinUrl: text("linkedin_url"),
+
   phoneNumber: varchar("phone_number", { length: 20 }),
 
   email: varchar("email", { length: 255 }).notNull(),
 });
+
+export type Mentor = typeof mentors.$inferSelect;

@@ -1,34 +1,54 @@
+'use client';
+
+import { useState } from 'react';
 import Image from 'next/image';
 
 interface Props {
   name: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   size: number;
   className?: string;
 }
 
 const getInitials = (name: string) =>
   name
-    .split(' ')
+    .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
     .map((part) => part[0].toUpperCase())
-    .join('');
+    .join('') || '?';
+
+const isUsableImageUrl = (url: string) => {
+  if (url.startsWith('/')) return true;
+  try {
+    const { protocol } = new URL(url);
+    return protocol === 'https:' || protocol === 'http:';
+  } catch {
+    return false;
+  }
+};
 
 export const MentorAvatar = ({ name, imageUrl, size, className = '' }: Props) => {
-  if (imageUrl) {
+  const trimmedUrl = imageUrl?.trim();
+
+  const [failed, setFailed] = useState(false);
+
+  if (trimmedUrl && isUsableImageUrl(trimmedUrl) && !failed) {
     return (
       <Image
-        src={imageUrl}
+        src={trimmedUrl}
         alt={name}
         width={size}
         height={size}
-        className={`shrink-0 rounded-full object-cover ${className}`}
+        unoptimized
+        onError={() => setFailed(true)}
+        style={{ width: size, height: size }}
+        className={`shrink-0 rounded-full bg-gray-100 object-cover ${className}`}
       />
     );
   }
 
-  // Fallback when a mentor has no photo
+
   return (
     <div
       role="img"

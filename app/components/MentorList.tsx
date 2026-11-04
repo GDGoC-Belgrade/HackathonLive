@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Search } from 'lucide-react';
-import { Mentor } from '@/data/mockMentors';
+import { Search, SearchX } from 'lucide-react';
+import type { Mentor } from '@/lib/types/mentors';
 import { MentorCard, MentorCardColor } from '@/app/components/MentorCard';
+import { StateMessage } from '@/app/components/StateMessage';
 
 const CARD_COLORS: MentorCardColor[] = ['blue', 'yellow', 'red', 'green'];
 
@@ -16,7 +17,7 @@ export const MentorList = ({ mentors }: Props) => {
 
   const normalizedQuery = query.trim().toLowerCase();
   const filteredMentors = mentors.filter((mentor) =>
-    [mentor.name, mentor.role, mentor.company, ...(mentor.topics ?? [])]
+    [mentor.name, mentor.role, mentor.company, mentor.bio]
       .filter((value): value is string => Boolean(value))
       .some((value) => value.toLowerCase().includes(normalizedQuery)),
   );
@@ -29,15 +30,16 @@ export const MentorList = ({ mentors }: Props) => {
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search topics, mentors or companies"
+          placeholder="Search mentors, roles or companies"
           aria-label="Search mentors"
           // text-base (16px) stops iOS Safari from zooming in on focus
-          className="w-full bg-transparent text-base outline-none placeholder:text-sm placeholder:text-gray-500"
+          className="w-full min-w-0 bg-transparent text-base outline-none placeholder:text-sm placeholder:text-gray-500"
         />
       </label>
 
       {filteredMentors.length > 0 ? (
-        <div className="grid grid-cols-2 gap-3">
+        // Two columns on most phones, one on very narrow screens (e.g. folded phones)
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-3">
           {filteredMentors.map((mentor) => (
             // Color follows the mentor, so it stays the same while filtering
             <MentorCard
@@ -48,7 +50,20 @@ export const MentorList = ({ mentors }: Props) => {
           ))}
         </div>
       ) : (
-        <p className="py-10 text-center text-sm text-gray-500">No mentors match “{query}”.</p>
+        <StateMessage
+          icon={SearchX}
+          title="No mentors found"
+          description={`Nothing matches “${query.trim()}”. Try a different name, role or company.`}
+          action={
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
+            >
+              Clear search
+            </button>
+          }
+        />
       )}
     </>
   );

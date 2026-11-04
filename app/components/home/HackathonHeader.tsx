@@ -1,4 +1,4 @@
-import { Hackathon } from '@/data/mockHome';
+import { Hackathon } from '@/lib/types/home';
 
 interface Props {
   hackathon: Hackathon;
