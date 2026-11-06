@@ -14,7 +14,7 @@ export function toValidQuest(row: QuestDTO): QuestDTO | null {
   const googleFormUrl = row.googleFormUrl.trim();
   const description = row.description?.trim() || null;
 
-  if (!title || !category ) {
+  if (!title || !category || !isValidGoogleFormUrl(googleFormUrl) ) {
     console.warn(`Skipping invalid quest with id ${row.id}`);
     return null;
   }
