@@ -65,11 +65,16 @@ export function QuestCard({ quest, index }: QuestCardProps) {
           </p>
         )}
         {hasValidLink ? (
-          <span className={`${BUTTON_CLASS} ${theme.bg} ${theme.text}`}>
+          <a
+            href={quest.googleFormUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${BUTTON_CLASS} ${theme.bg} ${theme.text} transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue`}
+          >
             <Icon className="h-4 w-4" aria-hidden="true" />
             Open Quest
             <span className="sr-only">(opens in a new tab)</span>
-          </span>
+          </a>
         ) : (
           <span className={`${BUTTON_CLASS} border border-gray-200 bg-white text-gray-500`}>
             <Link2Off className="h-4 w-4" aria-hidden="true" />
@@ -80,18 +85,9 @@ export function QuestCard({ quest, index }: QuestCardProps) {
     </>
   );
 
-  if (!hasValidLink) {
-    return <div className={`${CARD_CLASS} ${theme.border}`}>{content}</div>;
-  }
-
-  return (
-    <a
-      href={quest.googleFormUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`${CARD_CLASS} transition-colors hover:bg-gray-50 active:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue ${theme.border}`}
-    >
+    return (
+    <div className={`${CARD_CLASS} ${theme.border}`}>
       {content}
-    </a>
+    </div>
   );
 }
